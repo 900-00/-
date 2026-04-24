@@ -1,0 +1,1912 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOUR.NADY | Educational Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- تهيئة ألوان Tailwind لتتطابق مع شعار كلية التربية جامعة المنيا -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            400: '#a3b4cc',
+                            500: '#7a91b3',
+                            700: '#344966',
+                            800: '#22324c',
+                            900: '#152030',
+                        },
+                        indigo: {
+                            300: '#d9b98c',
+                            400: '#b99159',
+                            500: '#a35a43',
+                            600: '#8c4731',
+                        },
+                        amber: {
+                            400: '#f07662',
+                            500: '#e55a43',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="icon" href="IMG_1068.PNG.jpg">
+    
+    <!-- إضافة مكتبة MathJax لعرض المعادلات الرياضية -->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']]
+          }
+        };
+    </script>
+
+    <style>
+        /* Educational Theme Variables - Minia University Ed. Faculty Palette */
+        :root {
+            --primary: #8c4731; 
+            --primary-light: #b99159; 
+            --secondary: #e55a43; 
+            --bg-dark: #152030; 
+            --surface-dark: #22324c; 
+            --glass-bg: rgba(34, 50, 76, 0.7);
+            --glass-border: rgba(185, 145, 89, 0.2);
+            --text-color: #F8FAFC; 
+            --text-muted: #a3b4cc; 
+        }
+
+        body.light-mode {
+            --bg-dark: #f0f4f8; 
+            --surface-dark: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(140, 71, 49, 0.2);
+            --text-color: #152030;
+            --text-muted: #4a5d78;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-color);
+            transition: background-color 0.4s ease, color 0.4s ease;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Abstract Background */
+        body::before, body::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            opacity: 0.25;
+            animation: float-bg 20s infinite alternate;
+        }
+        body::before {
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+            top: -100px; left: -100px;
+        }
+        body::after {
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, var(--primary-light) 0%, transparent 70%);
+            bottom: -50px; right: -50px;
+            animation-delay: -5s;
+        }
+
+        @keyframes float-bg {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(50px, 50px) scale(1.1); }
+            100% { transform: translate(-30px, 80px) scale(0.9); }
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+            border-radius: 1.25rem;
+        }
+
+        .logo-glow {
+            border-radius: 50%;
+            border: 2px solid var(--primary-light);
+            box-shadow: 0 0 20px rgba(185, 145, 89, 0.4);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            object-fit: cover;
+            background: white;
+        }
+        .logo-glow:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 30px rgba(140, 71, 49, 0.5);
+            cursor: pointer;
+        }
+        .profile-glow { border-radius: 50%; border: 3px solid var(--primary-light); padding: 2px; }
+
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(40px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-fade-in { animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(40px) scale(0.98);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+        .scroll-reveal.scroll-active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .btn-hover { transition: all 0.3s ease; }
+        .btn-hover:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(140, 71, 49, 0.3); }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-light); }
+        
+        .loader {
+            border-top-color: var(--primary-light);
+            -webkit-animation: spinner 1s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
+            animation: spinner 1s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
+        }
+        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @keyframes pulse-soft {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(229, 90, 67, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(229, 90, 67, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(229, 90, 67, 0); }
+        }
+        .animate-pulse-red { animation: pulse-soft 2s infinite; }
+
+        .course-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .course-card:hover { transform: translateY(-8px); border-color: var(--primary-light); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5); }
+        .course-icon-bg { transition: all 0.5s ease; }
+        .course-card:hover .course-icon-bg { transform: scale(1.2) rotate(-10deg); opacity: 0.2; }
+
+        .edu-input {
+            width: 100%; padding: 0.75rem 1rem; background: var(--surface-dark);
+            border: 1px solid var(--glass-border); border-radius: 0.75rem;
+            color: var(--text-color); transition: all 0.3s ease;
+        }
+        .edu-input:focus { outline: none; border-color: var(--primary-light); box-shadow: 0 0 0 3px rgba(185, 145, 89, 0.2); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+
+    <!-- Logo Modal -->
+    <div id="logoModal" onclick="this.classList.add('hidden')" class="fixed inset-0 z-[100] bg-black/90 hidden flex items-center justify-center cursor-pointer backdrop-blur-md animate-fade-in">
+        <img src="IMG_1068.PNG.jpg" class="max-w-[90%] max-h-[90%] rounded-full shadow-[0_0_50px_rgba(185,145,89,0.5)] border-4 border-[#b99159]">
+    </div>
+
+    <!-- Responsive Navbar -->
+    <nav class="glass-panel sticky top-0 z-40 px-3 py-3 sm:px-6 sm:py-4 flex justify-between items-center border-b border-indigo-500/20 rounded-none shadow-sm gap-2 w-full">
+        <!-- Logo Section -->
+        <div class="flex items-center gap-2 sm:gap-4 shrink-0">
+            <img src="IMG_1068.PNG.jpg" onclick="document.getElementById('logoModal').classList.remove('hidden')" alt="Logo" class="w-10 h-10 sm:w-12 sm:h-12 logo-glow">
+            <div class="hidden sm:block">
+                <h1 class="text-lg sm:text-xl font-black text-transparent bg-clip-text bg-gradient-to-l from-indigo-400 to-amber-400 tracking-wide leading-none">NOUR.NADY</h1>
+                <p class="text-[9px] sm:text-[10px] text-gray-400 font-semibold uppercase tracking-widest mt-1">Educational Platform</p>
+            </div>
+        </div>
+
+        <!-- Profile Section -->
+        <div id="navProfile" class="flex-1 flex justify-center hidden transition-all duration-300 min-w-[100px] overflow-hidden px-1 sm:px-2">
+            <!-- Content injected by JS -->
+        </div>
+
+        <!-- Right Buttons Section -->
+        <div class="flex items-center gap-2 sm:gap-4 shrink-0">
+            <div class="relative hidden" id="notifWrapper">
+                <button onclick="window.toggleNotifMenu()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-slate-800 hover:bg-slate-700 border border-slate-700 transition relative shrink-0">
+                    <i class="fas fa-bell text-indigo-400 text-sm sm:text-lg"></i>
+                    <span id="notifBadge" class="absolute top-0 right-0 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-red-500 rounded-full hidden animate-pulse-red border-2 border-slate-900"></span>
+                </button>
+            </div>
+
+            <button id="themeToggle" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-slate-800 hover:bg-slate-700 border border-slate-700 transition shrink-0">
+                <i class="fas fa-moon text-amber-400 text-sm sm:text-base"></i>
+            </button>
+            <button id="langToggle" class="px-2 py-1.5 sm:px-4 sm:py-2 rounded-lg border border-indigo-500/30 text-indigo-300 hover:bg-indigo-600 hover:text-white transition font-bold text-xs sm:text-sm bg-indigo-900/20 shrink-0 whitespace-nowrap">
+                English
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Notification Center Modal (Centered for Mobile and PC) -->
+    <div id="notifDropdown" class="hidden fixed inset-0 z-[150] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
+        <div class="glass-panel w-full max-w-md max-h-[85vh] flex flex-col rounded-3xl overflow-hidden shadow-2xl border border-indigo-500/20 bg-slate-900 relative transform transition-all">
+            <div class="p-4 sm:p-5 border-b border-slate-700/50 flex justify-between items-center bg-slate-900/95 z-10 shrink-0">
+                <h4 class="font-black text-white text-base sm:text-lg flex items-center"><div class="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center mr-2"><i class="fas fa-bell text-amber-500"></i></div> الإشعارات</h4>
+                <button onclick="window.toggleNotifMenu()" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:bg-red-500 transition shadow-sm"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="notifList" class="p-3 sm:p-4 space-y-2 overflow-y-auto flex-1 custom-scrollbar pb-6"></div>
+        </div>
+    </div>
+
+    <main id="app" class="flex-grow container mx-auto p-4 sm:p-6 lg:p-8 relative w-full max-w-7xl">
+        <!-- Content injected by JS -->
+    </main>
+
+    <footer class="text-center py-6 text-slate-500 text-sm border-t border-slate-800/50 mt-auto bg-slate-900/30 backdrop-blur-sm relative z-10 scroll-reveal">
+        <!-- رابط الدعم الفني -->
+        <div class="flex items-center justify-center gap-4 mb-4">
+            <a href="https://t.me/+201146979833" target="_blank" class="flex items-center gap-2 text-indigo-400 hover:text-indigo-300 transition bg-indigo-500/10 hover:bg-indigo-500/20 px-5 py-2.5 rounded-full border border-indigo-500/20 shadow-lg">
+                <i class="fab fa-telegram text-xl"></i>
+                <span class="font-bold">الدعم الفني</span>
+            </a>
+        </div>
+        
+        <div class="flex items-center justify-center gap-2 mb-2">
+            <i class="fas fa-graduation-cap text-indigo-400 text-xl"></i>
+        </div>
+        Designed & Developed by <span class="text-amber-500 font-bold">NOUR NADY</span> &copy; 2026
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 left-6 hidden z-[200] transform transition-all duration-300 translate-y-10 opacity-0 w-[calc(100%-3rem)] sm:w-auto">
+        <div class="glass-panel px-4 py-3 sm:px-6 sm:py-4 rounded-xl flex items-center gap-3 sm:gap-4 shadow-2xl border-l-4 border-l-amber-500 bg-slate-800/95">
+            <div id="toastIconContainer" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center bg-slate-700 shrink-0">
+                <i id="toastIcon" class="fas fa-info-circle text-amber-500 text-sm"></i>
+            </div>
+            <span id="toastMsg" class="font-bold text-white text-xs sm:text-sm"></span>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, setDoc, getDoc, arrayUnion, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBnGRKtuNq37uFTVs4n16jWshKu5rMaXnQ",
+            authDomain: "project-3403979804090393783.firebaseapp.com",
+            projectId: "project-3403979804090393783",
+            storageBucket: "project-3403979804090393783.firebasestorage.app",
+            messagingSenderId: "200296118651",
+            appId: "1:200296118651:web:aff0e8f1615f2bdb78a5de",
+            measurementId: "G-ZNF0M7D6J9"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // التعديل الرابع: حفظ واسترجاع اللغة من localStorage
+        let currentLang = localStorage.getItem('platform_lang') || 'ar';
+        document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+        
+        let currentUser = null;
+        let userData = null;
+        let currentExamQuestions = [];
+        let notifUnsubscribe = null;
+        let isSigningUp = false;
+        let showSignupSuccess = false;
+
+        const ADMIN_EMAIL = "noornady00@gmail.com";
+        const ADMIN_PASS = "noornady2007n";
+        const ADMIN_PHONE = "01146979833"; 
+        const PHONE_DOMAIN = "@nournady.platform";
+
+        // ضبط نص زر اللغة عند بدء التحميل
+        document.addEventListener("DOMContentLoaded", () => {
+            const langBtn = document.getElementById('langToggle');
+            if(langBtn) langBtn.innerText = currentLang === 'ar' ? 'English' : 'عربي';
+        });
+
+        // تعديل سلاسة الحركة (Observer) بحيث تظهر العناصر ولا تختفي مجدداً
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('scroll-active');
+                    scrollObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.0, rootMargin: "100px 0px 100px 0px" });
+
+        window.applyScrollAnimations = () => {
+            document.querySelectorAll('.glass-panel, .course-card, .q-block, .scroll-reveal').forEach(el => {
+                if(!el.classList.contains('scroll-reveal')) el.classList.add('scroll-reveal');
+                if(!el.classList.contains('scroll-active')) scrollObserver.observe(el);
+            });
+        };
+
+        // Custom Animated Modal System
+        window.showCustomModal = (title, message, isInput = false, type = 'confirm') => {
+            return new Promise((resolve) => {
+                const modalId = 'customModal-' + Date.now();
+                const bgIcon = type === 'danger' ? 'text-red-500' : 'text-indigo-400';
+                const btnClass = type === 'danger' ? 'bg-red-600 hover:bg-red-500' : 'bg-indigo-600 hover:bg-indigo-500';
+                
+                const html = `
+                    <div id="${modalId}" class="fixed inset-0 z-[200] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+                        <div class="glass-panel p-6 md:p-8 rounded-3xl w-full max-w-md border border-indigo-500/30 shadow-2xl transform scale-95 transition-transform duration-300 relative overflow-hidden bg-slate-900">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700 shrink-0">
+                                    <i class="${type === 'danger' ? 'fas fa-exclamation-triangle' : 'fas fa-question-circle'} text-2xl ${bgIcon}"></i>
+                                </div>
+                                <h3 class="text-xl font-black text-white leading-tight">${title}</h3>
+                            </div>
+                            <p class="text-slate-400 mb-6 font-semibold text-sm sm:text-base">${message}</p>
+                            ${isInput ? `<input type="text" id="modalInput-${modalId}" class="edu-input mb-6" placeholder="اكتب هنا...">` : ''}
+                            
+                            <div class="flex gap-3">
+                                <button id="modalCancel-${modalId}" class="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold transition border border-slate-700 text-sm sm:text-base">إلغاء</button>
+                                <button id="modalConfirm-${modalId}" class="flex-1 py-3 ${btnClass} text-white rounded-xl font-bold transition shadow-lg text-sm sm:text-base">${type === 'danger' ? 'تأكيد الحذف' : 'تأكيد'}</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', html);
+                
+                const modalEl = document.getElementById(modalId);
+                const contentEl = modalEl.querySelector('.glass-panel');
+                
+                setTimeout(() => {
+                    modalEl.classList.remove('opacity-0');
+                    contentEl.classList.remove('scale-95');
+                }, 10);
+
+                const close = (val) => {
+                    modalEl.classList.add('opacity-0');
+                    contentEl.classList.add('scale-95');
+                    setTimeout(() => { modalEl.remove(); resolve(val); }, 300);
+                };
+
+                document.getElementById(`modalCancel-${modalId}`).onclick = () => close(isInput ? null : false);
+                document.getElementById(`modalConfirm-${modalId}`).onclick = () => {
+                    if (isInput) {
+                        const val = document.getElementById(`modalInput-${modalId}`).value;
+                        close(val);
+                    } else {
+                        close(true);
+                    }
+                };
+            });
+        };
+
+        const dictionary = {
+            ar: {
+                welcome: "مرحباً يا",
+                subtitle: "المنصة التعليمية لطلاب كلية التربية - قسم الرياضيات",
+                student: "طالب",
+                admin: "مشرف",
+                login: "تسجيل الدخول",
+                signup: "إنشاء حساب جديد",
+                email: "البريد الإلكتروني",
+                password: "كلمة المرور",
+                name: "الاسم الرباعي",
+                phone: "رقم الهاتف",
+                year: "الفرقة الدراسية",
+                year1: "الفرقة الأولى",
+                year2: "الفرقة الثانية",
+                year3: "الفرقة الثالثة",
+                year4: "الفرقة الرابعة",
+                confirmPass: "تأكيد كلمة المرور",
+                submit: "إرسال الطلب",
+                waitApproval: "تم إرسال طلبك بنجاح! يرجى انتظار موافقة المشرف.",
+                dashboard: "لوحة التحكم",
+                courses: "المقررات الدراسية",
+                exams: "الامتحانات والتقييمات",
+                files: "الملفات والملازم",
+                requests: "طلبات التسجيل",
+                students: "الطلاب المسجلين",
+                notifications: "الإشعارات",
+                settings: "إعدادات الحساب",
+                stats: "الإحصائيات",
+                logout: "تسجيل الخروج",
+                addCourse: "إضافة مقرر",
+                addExam: "إضافة امتحان",
+                manual: "يدوي",
+                approve: "موافقة",
+                reject: "رفض",
+                delete: "حذف",
+                view: "عرض",
+                score: "النتيجة",
+                explanation: "التفسير الأكاديمي",
+                correct: "إجابة صحيحة",
+                wrong: "إجابة خاطئة",
+                send: "إرسال",
+                noData: "لا توجد بيانات متاحة حالياً",
+                videoLink: "رابط المحاضرة (يوتيوب)",
+                desc: "الوصف",
+                title: "عنوان المحتوى",
+                subject: "المادة",
+                create: "إنشاء",
+                questionsCount: "عدد الأسئلة",
+                examType: "نوع السؤال",
+                mcq: "اختيار من متعدد",
+                tf: "صح وخطأ",
+                essay: "سؤال مقالي",
+                examResult: "نتيجة التقييم",
+                showAns: "مراجعة الإجابات",
+                yourAns: "إجابتك",
+                correctAns: "الإجابة النموذجية",
+                uploadFile: "رفع ملف (رابط)",
+                link: "الرابط",
+                fileType: "نوع الملف",
+                drive: "جوجل درايف",
+                local: "من الجهاز",
+                aboutDev: "تم تطوير وبرمجة المنصة بواسطة نور نادي",
+                addQuestion: "إضافة السؤال لبنك الأسئلة",
+                question: "نص السؤال",
+                options: "الاختيارات (افصل بـ فاصلة)",
+                correctAnswer: "الإجابة الصحيحة",
+                notifTitle: "عنوان الإشعار",
+                notifBody: "نص الإشعار",
+                sendNotif: "إرسال إشعار للطلاب",
+                noNotifs: "صندوق الإشعارات فارغ",
+                profilePic: "الصورة الشخصية",
+                changePic: "تحديث الصورة",
+                newPassword: "كلمة المرور الجديدة",
+                saveChanges: "حفظ التغييرات",
+                uploading: "جاري المعالجة والرفع..."
+            },
+            en: {
+                welcome: "Welcome",
+                subtitle: "The Leading Educational Platform for Math Dept.",
+                student: "Student",
+                admin: "Admin",
+                login: "Login",
+                signup: "Sign Up",
+                email: "Email",
+                password: "Password",
+                name: "Full Name",
+                phone: "Phone Number",
+                year: "Academic Year",
+                year1: "First Year",
+                year2: "Second Year",
+                year3: "Third Year",
+                year4: "Fourth Year",
+                confirmPass: "Confirm Password",
+                submit: "Submit Request",
+                waitApproval: "Request sent successfully! Wait for approval.",
+                dashboard: "Dashboard",
+                courses: "Courses",
+                exams: "Exams & Quizzes",
+                files: "Materials & Files",
+                requests: "Registration Requests",
+                students: "Enrolled Students",
+                notifications: "Notifications",
+                settings: "Account Settings",
+                stats: "Statistics",
+                logout: "Logout",
+                addCourse: "Add Course",
+                addExam: "Add Exam",
+                manual: "Manual",
+                approve: "Approve",
+                reject: "Reject",
+                delete: "Delete",
+                view: "View",
+                score: "Score",
+                explanation: "Explanation",
+                correct: "Correct",
+                wrong: "Wrong",
+                send: "Send",
+                noData: "No data available",
+                videoLink: "Lecture Link (YT)",
+                desc: "Description",
+                title: "Title",
+                subject: "Subject",
+                create: "Create",
+                questionsCount: "Question Count",
+                examType: "Question Type",
+                mcq: "Multiple Choice",
+                tf: "True/False",
+                essay: "Essay",
+                examResult: "Assessment Result",
+                showAns: "Review Answers",
+                yourAns: "Your Answer",
+                correctAns: "Model Answer",
+                uploadFile: "Upload Link",
+                link: "URL",
+                fileType: "File Type",
+                drive: "Google Drive",
+                local: "Local",
+                aboutDev: "Developed by Nour Nady",
+                addQuestion: "Add to Question Bank",
+                question: "Question Text",
+                options: "Options",
+                correctAnswer: "Correct Answer",
+                notifTitle: "Notification Title",
+                notifBody: "Notification Body",
+                sendNotif: "Send Broadcast",
+                noNotifs: "No new notifications",
+                profilePic: "Profile Picture",
+                changePic: "Update Photo",
+                newPassword: "New Password",
+                saveChanges: "Save Changes",
+                uploading: "Uploading..."
+            }
+        };
+
+        const t = (key) => dictionary[currentLang][key] || key;
+
+        const showToast = (msg, type = 'info') => {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const toastIcon = document.getElementById('toastIcon');
+            const iconContainer = document.getElementById('toastIconContainer');
+            
+            toastMsg.textContent = msg;
+            
+            toast.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 sm:translate-x-0 sm:left-6 z-[200] transform transition-all duration-500 w-[90%] sm:w-auto';
+            toast.children[0].className = 'glass-panel px-4 py-3 sm:px-6 sm:py-4 rounded-xl flex items-center gap-3 sm:gap-4 shadow-2xl border-l-4 bg-slate-800/95 w-full';
+            
+            if(type === 'success') {
+                toastIcon.className = 'fas fa-check text-green-500 text-sm sm:text-base';
+                iconContainer.className = 'w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center bg-green-500/20 shrink-0';
+                toast.children[0].classList.add('border-l-green-500');
+            } else if(type === 'error') {
+                toastIcon.className = 'fas fa-exclamation text-red-500 text-sm sm:text-base';
+                iconContainer.className = 'w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center bg-red-500/20 shrink-0';
+                toast.children[0].classList.add('border-l-red-500');
+            } else {
+                toastIcon.className = 'fas fa-info text-amber-500 text-sm sm:text-base';
+                iconContainer.className = 'w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center bg-amber-500/20 shrink-0';
+                toast.children[0].classList.add('border-l-amber-500');
+            }
+            
+            requestAnimationFrame(() => {
+                toast.classList.add('translate-y-0', 'opacity-100');
+            });
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-10', 'opacity-0');
+            }, 3000);
+        };
+
+        const render = (html) => { 
+            document.getElementById('app').innerHTML = html; 
+        };
+        
+        const toggleTheme = () => { 
+            document.body.classList.toggle('light-mode'); 
+            const icon = document.querySelector('#themeToggle i');
+            if(document.body.classList.contains('light-mode')){
+                icon.className = 'fas fa-sun text-amber-500';
+            } else {
+                icon.className = 'fas fa-moon text-amber-400';
+            }
+        };
+        
+        // التعديل الرابع: حفظ اللغة عند التغيير 
+        const toggleLang = () => { 
+            currentLang = currentLang === 'ar' ? 'en' : 'ar'; 
+            localStorage.setItem('platform_lang', currentLang);
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr'; 
+            document.getElementById('langToggle').innerText = currentLang === 'ar' ? 'English' : 'عربي';
+            router(); 
+        };
+
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+        document.getElementById('langToggle').addEventListener('click', toggleLang);
+
+        const getAuthEmail = (phone) => {
+            if(phone === ADMIN_PHONE) return ADMIN_EMAIL;
+            return `${phone}${PHONE_DOMAIN}`;
+        };
+
+        window.formatPhoneInput = (input) => {
+            const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+            let val = input.value;
+            for (let i = 0; i < 10; i++) {
+                const regex = new RegExp(arabicNumbers[i], 'g');
+                val = val.replace(regex, i);
+            }
+            val = val.replace(/\D/g, '');
+            input.value = val;
+        };
+
+        window.toggleNotifMenu = async () => {
+            const dropdown = document.getElementById('notifDropdown');
+            dropdown.classList.toggle('hidden');
+            if (!dropdown.classList.contains('hidden') && currentUser) {
+                document.getElementById('notifBadge').classList.add('hidden');
+                const q = query(collection(db, "notifications"), orderBy("date", "desc"));
+                const snapshot = await getDocs(q);
+                snapshot.forEach(async (docSnap) => {
+                    const data = docSnap.data();
+                    if (!data.readBy || !data.readBy.includes(currentUser.uid)) {
+                        await updateDoc(doc(db, "notifications", docSnap.id), { readBy: arrayUnion(currentUser.uid) });
+                    }
+                });
+            }
+        };
+
+        const startNotificationListener = () => {
+            if (!currentUser) return;
+            const q = query(collection(db, "notifications"), orderBy("date", "desc"));
+            notifUnsubscribe = onSnapshot(q, (snapshot) => {
+                const list = document.getElementById('notifList');
+                const badge = document.getElementById('notifBadge');
+                if(!list || !badge) return;
+                let unreadCount = 0;
+                let html = '';
+                if (snapshot.empty) { html = `<div class="text-slate-500 text-center p-6 text-sm flex flex-col items-center"><i class="fas fa-bell-slash text-2xl mb-2 opacity-50"></i>${t('noNotifs')}</div>`; } 
+                else {
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        const isRead = data.readBy && data.readBy.includes(currentUser.uid);
+                        if (!isRead) unreadCount++;
+                        const icon = data.type === 'alert' ? 'fa-exclamation-triangle text-amber-500 bg-amber-500/10' : data.type === 'success' ? 'fa-check text-green-500 bg-green-500/10' : 'fa-info text-indigo-400 bg-indigo-500/10';
+                        html += `<div class="p-3 sm:p-4 rounded-xl hover:bg-slate-800/50 transition border border-transparent hover:border-slate-700 flex gap-3 sm:gap-4 items-start ${!isRead ? 'bg-slate-800/40 border-slate-700/50' : 'bg-transparent'}">
+                                    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center flex-shrink-0 ${icon.split(' ')[2]} border border-slate-700/50">
+                                        <i class="fas ${icon.split(' ')[0]} ${icon.split(' ')[1]} text-xs sm:text-sm"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h5 class="font-bold text-sm sm:text-base ${isRead ? 'text-slate-400' : 'text-white'}">${data.title}</h5>
+                                        <p class="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed">${data.message}</p>
+                                    </div>
+                                 </div>`;
+                    });
+                }
+                list.innerHTML = html;
+                if (unreadCount > 0) badge.classList.remove('hidden'); else badge.classList.add('hidden');
+            });
+        };
+
+        const compressImage = async (file) => {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 300; 
+                        const scaleSize = MAX_WIDTH / img.width;
+                        canvas.width = MAX_WIDTH;
+                        canvas.height = img.height * scaleSize;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        resolve(canvas.toDataURL('image/jpeg', 0.7)); 
+                    };
+                };
+            });
+        };
+
+        // تسجيل مشاهدة الفيديو وإنشاء الفريم ديناميكياً لتسريع التحميل
+        window.logVideoClick = async (videoId, videoTitle, overlayEl, videoUrl) => {
+            // إخفاء الغطاء وزر التشغيل الوهمي
+            overlayEl.classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => overlayEl.classList.add('hidden'), 300);
+            
+            // استبدال الصورة (Thumbnail) بمشغل اليوتيوب الحقيقي
+            const imgEl = overlayEl.nextElementSibling;
+            if(imgEl && imgEl.tagName === 'IMG') {
+                const iframe = document.createElement('iframe');
+                // إضافة خاصية التشغيل التلقائي بمجرد التحميل
+                const autoPlayUrl = videoUrl + (videoUrl.includes('?') ? '&' : '?') + 'autoplay=1';
+                iframe.src = autoPlayUrl;
+                iframe.className = "w-full h-full absolute top-0 left-0 z-0";
+                iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+                iframe.allowFullscreen = true;
+                imgEl.replaceWith(iframe);
+            }
+            
+            if (currentUser && currentUser.role === 'student') {
+                try {
+                    await addDoc(collection(db, "activity_logs"), {
+                        userId: currentUser.uid,
+                        userName: userData.name,
+                        type: 'video',
+                        videoTitle: videoTitle,
+                        date: new Date().toISOString()
+                    });
+                } catch(e) { console.error("Error logging view", e); }
+            }
+        };
+
+        // دالة فتح وإغلاق مستطيل الفيديو
+        window.toggleVideoAccordion = (containerId, iconId) => {
+            const container = document.getElementById(containerId);
+            const icon = document.getElementById(iconId);
+            if (container.classList.contains('hidden')) {
+                container.classList.remove('hidden');
+                if(icon) icon.classList.add('rotate-180');
+            } else {
+                container.classList.add('hidden');
+                if(icon) icon.classList.remove('rotate-180');
+            }
+        };
+
+        // دالة الزر الأخضر (تم الإنجاز) مع حفظ التقدم في حساب الطالب بقاعدة البيانات وتصحيح الخطأ
+        window.toggleVideoCompletion = async (e, videoId) => {
+            // إيقاف فتح الفيديو عند الضغط على الزر فقط
+            if(e) e.stopPropagation();
+            
+            if (!currentUser) return; // تم إزالة شرط الطالب ليتمكن المشرف من التجربة أيضاً
+
+            if (!userData) userData = {};
+            if (!userData.completedVideos) userData.completedVideos = [];
+            
+            const isCompleted = userData.completedVideos.includes(videoId);
+            const btn = document.getElementById(`btn-complete-${videoId}`);
+            const textSpan = document.getElementById(`text-complete-${videoId}`);
+            const icon = btn.querySelector('i');
+
+            if (isCompleted) {
+                // إزالة من المكتمل وإرجاعه للشكل العادي
+                userData.completedVideos = userData.completedVideos.filter(id => id !== videoId);
+                btn.className = "bg-slate-700 text-slate-300 hover:bg-slate-600 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition flex items-center gap-1.5 shrink-0 ml-2";
+                icon.className = "fas fa-circle";
+                textSpan.innerText = "تم الإنجاز";
+            } else {
+                // تعيين كمكتمل وتغييره للأخضر
+                userData.completedVideos.push(videoId);
+                btn.className = "bg-green-500 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition flex items-center gap-1.5 shrink-0 ml-2";
+                icon.className = "fas fa-check-circle";
+                textSpan.innerText = "مكتمل";
+            }
+
+            // حفظ التحديث مباشرة في الـ Firebase بطريقة آمنة
+            if (currentUser.uid) {
+                try {
+                    await setDoc(doc(db, "users", currentUser.uid), {
+                        completedVideos: userData.completedVideos
+                    }, { merge: true });
+                } catch(error) {
+                    console.error("Error updating completion status", error);
+                }
+            }
+        };
+
+        const views = {
+            auth: () => `
+                <div class="flex flex-col items-center justify-center min-h-[75vh] w-full animate-fade-in py-10">
+                    <div class="text-center mb-8 flex flex-col items-center">
+                         <div class="relative mb-6">
+                            <div class="absolute inset-0 bg-indigo-500 blur-3xl opacity-20 rounded-full animate-pulse"></div>
+                            <img src="6000.jpg" class="w-24 h-24 sm:w-28 sm:h-28 relative z-10 logo-glow shadow-2xl">
+                         </div>
+                        <h1 class="text-3xl sm:text-4xl md:text-5xl font-black mb-3 text-transparent bg-clip-text bg-gradient-to-l from-indigo-400 to-amber-400 tracking-wide">كلية التربية</h1>
+                        <p class="text-base sm:text-lg md:text-xl text-slate-400 font-medium max-w-md px-4">${t('subtitle')}</p>
+                    </div>
+                    <div class="glass-panel p-6 sm:p-8 md:p-10 rounded-3xl w-full max-w-md border border-indigo-500/20 shadow-2xl relative overflow-hidden scroll-reveal">
+                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-amber-500"></div>
+                        
+                        <div class="flex mb-8 bg-slate-800/50 p-1 rounded-xl">
+                            <button onclick="window.setAuthMode('login')" class="flex-1 py-2 text-center rounded-lg text-sm font-bold transition-all ${authMode === 'login' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-400 hover:text-white'}">${t('login')}</button>
+                            <button onclick="window.setAuthMode('signup')" class="flex-1 py-2 text-center rounded-lg text-sm font-bold transition-all ${authMode === 'signup' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-400 hover:text-white'}">${t('signup')}</button>
+                        </div>
+                        <form id="authForm" class="flex flex-col gap-4 sm:gap-5">
+                            ${authMode === 'signup' ? `
+                                <div class="relative scroll-reveal">
+                                    <i class="fas fa-user absolute right-4 top-3.5 text-slate-500"></i>
+                                    <input type="text" id="name" placeholder="${t('name')}" class="edu-input pl-4 pr-10" required>
+                                </div>
+                                <div class="relative scroll-reveal">
+                                    <i class="fas fa-graduation-cap absolute right-4 top-3.5 text-slate-500"></i>
+                                    <select id="year" class="edu-input pl-4 pr-10 appearance-none text-slate-300">
+                                        <option value="1">${t('year1')}</option>
+                                        <option value="2">${t('year2')}</option>
+                                        <option value="3">${t('year3')}</option>
+                                        <option value="4">${t('year4')}</option>
+                                    </select>
+                                </div>
+                            ` : ''}
+                            <div class="relative scroll-reveal">
+                                <i class="fas fa-phone absolute right-4 top-3.5 text-slate-500"></i>
+                                <input type="text" id="phone" placeholder="${t('phone')} (01...)" class="edu-input pl-4 pr-10 text-left dir-ltr" oninput="window.formatPhoneInput(this)" required>
+                            </div>
+                            <div class="relative scroll-reveal">
+                                <i class="fas fa-lock absolute right-4 top-3.5 text-slate-500"></i>
+                                <input type="password" id="password" placeholder="${t('password')}" class="edu-input pl-4 pr-10" required>
+                            </div>
+                            ${authMode === 'signup' ? `
+                                <div class="relative scroll-reveal">
+                                    <i class="fas fa-lock absolute right-4 top-3.5 text-slate-500"></i>
+                                    <input type="password" id="confirmPass" placeholder="${t('confirmPass')}" class="edu-input pl-4 pr-10" required>
+                                </div>
+                            ` : ''}
+                            <button type="submit" class="mt-2 sm:mt-4 bg-indigo-600 hover:bg-indigo-500 text-white py-3 sm:py-3.5 rounded-xl font-bold transition shadow-lg shadow-indigo-500/30 flex justify-center items-center gap-2 group scroll-reveal">
+                                ${authMode === 'login' ? `${t('login')} <i class="fas fa-arrow-left text-sm group-hover:-translate-x-1 transition rtl:rotate-180 rtl:group-hover:translate-x-1"></i>` : `${t('submit')} <i class="fas fa-user-plus text-sm"></i>`}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            `,
+            signupSuccess: () => `
+                <div class="flex flex-col items-center justify-center min-h-[70vh] w-full animate-fade-in px-4">
+                    <div class="glass-panel p-8 sm:p-10 rounded-3xl w-full max-w-md text-center border border-indigo-500/20 relative overflow-hidden scroll-reveal">
+                         <div class="absolute -top-10 -right-10 w-32 h-32 bg-green-500/20 rounded-full blur-2xl"></div>
+                        <div class="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-green-400 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(16,185,129,0.3)] animate-float border-4 border-slate-800">
+                            <i class="fas fa-check text-3xl sm:text-4xl text-white"></i>
+                        </div>
+                        <h3 class="text-xl sm:text-2xl font-black text-white mb-3">تم تسجيل طلبك بنجاح!</h3>
+                        <p class="text-slate-400 text-sm sm:text-base mb-8 leading-relaxed">حسابك الأكاديمي الآن قيد المراجعة من قبل الإدارة. سيتم التفعيل في غضون 24 ساعة.</p>
+                        <button onclick="window.resetToLogin()" class="w-full bg-slate-700 hover:bg-slate-600 text-white py-3 rounded-xl font-bold transition flex justify-center items-center gap-2">العودة للرئيسية <i class="fas fa-home"></i></button>
+                    </div>
+                </div>
+            `,
+            settings: () => `
+                <div class="glass-panel p-6 sm:p-8 md:p-10 rounded-3xl max-w-2xl mx-auto border border-indigo-500/20 animate-fade-in relative mt-4 sm:mt-8 scroll-reveal">
+                    <button onclick="window.closeSettings()" class="absolute top-4 left-4 sm:top-6 sm:left-6 w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition"><i class="fas fa-times"></i></button>
+                    <div class="flex items-center gap-3 mb-6 sm:mb-8 border-b border-slate-700/50 pb-4">
+                        <i class="fas fa-user-cog text-xl sm:text-2xl text-indigo-400"></i>
+                        <h2 class="text-xl sm:text-2xl font-bold text-white">${t('settings')}</h2>
+                    </div>
+                    
+                    <div class="flex flex-col items-center mb-8 sm:mb-10 relative group scroll-reveal">
+                        <div class="relative">
+                            <img id="profilePreview" src="${userData?.avatar || 'https://ui-avatars.com/api/?name='+userData?.name+'&background=8c4731&color=fff'}" class="w-24 h-24 sm:w-32 sm:h-32 rounded-full profile-glow object-cover bg-slate-800 shadow-xl">
+                            <label for="profileUpload" class="absolute bottom-1 right-1 bg-amber-500 text-slate-900 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full cursor-pointer hover:bg-amber-400 shadow-lg border-2 border-slate-900 transition hover:scale-110"><i class="fas fa-camera text-sm sm:text-base"></i></label>
+                            <input type="file" id="profileUpload" accept="image/*" class="hidden" onchange="window.handleImageUpload(this)">
+                        </div>
+                    </div>
+                    <div class="space-y-4 sm:space-y-6 scroll-reveal">
+                        <div>
+                            <label class="block text-xs sm:text-sm font-bold text-slate-400 mb-1 sm:mb-2 pl-1">${t('name')}</label>
+                            <input type="text" id="settingName" value="${userData?.name}" class="edu-input text-sm sm:text-base">
+                        </div>
+                        <div>
+                            <label class="block text-xs sm:text-sm font-bold text-slate-400 mb-1 sm:mb-2 pl-1">${t('newPassword')}</label>
+                            <input type="password" id="settingPass" placeholder="••••••••" class="edu-input text-sm sm:text-base">
+                        </div>
+                        <div>
+                            <label class="block text-xs sm:text-sm font-bold text-slate-400 mb-1 sm:mb-2 pl-1">تأكيد كلمة المرور الجديدة</label>
+                            <input type="password" id="settingPassConfirm" placeholder="••••••••" class="edu-input text-sm sm:text-base">
+                        </div>
+                        <button onclick="window.saveSettings()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 sm:py-3.5 rounded-xl transition shadow-lg shadow-indigo-500/30 mt-4 text-sm sm:text-base">${t('saveChanges')}</button>
+                    </div>
+                </div>
+            `,
+            adminDashboard: () => `
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 animate-fade-in h-full">
+                    <div class="lg:col-span-1 flex flex-col gap-4">
+                        <div class="glass-panel p-4 sm:p-5 rounded-2xl border border-indigo-500/20 scroll-reveal">
+                            <div class="flex items-center gap-3 mb-4 sm:mb-6 pb-4 border-b border-slate-700/50">
+                                <div class="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center shrink-0"><i class="fas fa-shield-alt text-indigo-400"></i></div>
+                                <div>
+                                    <h3 class="font-bold text-white text-sm sm:text-base">لوحة الإدارة</h3>
+                                    <p class="text-xs text-amber-500">صلاحيات كاملة</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-1 sm:gap-1.5">
+                                ${['requests', 'students', 'courses', 'exams', 'files', 'notifications', 'stats', 'settings'].map(tab => `
+                                    <button onclick="window.setAdminTab('${tab}')" class="p-2 sm:p-3 text-start rounded-xl font-semibold text-xs sm:text-sm transition-all flex items-center gap-2 sm:gap-3 ${adminTab === tab ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}">
+                                        <i class="fas fa-${tab==='requests'?'user-clock':tab==='students'?'users':tab==='courses'?'book':tab==='exams'?'pen-alt':tab==='files'?'file-alt':tab==='notifications'?'bullhorn':tab==='stats'?'chart-line':'cog'} w-4 sm:w-5 text-center ${adminTab === tab ? 'text-indigo-200' : ''}"></i> ${t(tab)}
+                                    </button>
+                                `).join('')}
+                                <button onclick="handleLogout()" class="p-2 sm:p-3 text-start rounded-xl font-semibold text-xs sm:text-sm text-red-400 hover:bg-red-500/10 transition mt-2 sm:mt-4 border-t border-slate-700/50 flex items-center gap-2 sm:gap-3"><i class="fas fa-sign-out-alt w-4 sm:w-5 text-center"></i> ${t('logout')}</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-3 glass-panel p-4 sm:p-6 md:p-8 rounded-2xl min-h-[400px] lg:min-h-[600px] border border-indigo-500/20 relative overflow-hidden scroll-reveal">
+                        <div class="absolute top-0 right-0 w-48 h-48 sm:w-64 sm:h-64 bg-indigo-500/5 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+                        
+                        <h2 class="text-xl sm:text-2xl font-black mb-6 sm:mb-8 text-white flex items-center gap-2 sm:gap-3">
+                            <span class="w-1.5 sm:w-2 h-6 sm:h-8 bg-amber-500 rounded-full inline-block"></span>
+                            ${t(adminTab)}
+                        </h2>
+                        <div id="adminContent" class="z-10 relative">
+                            <div class="flex justify-center py-20"><div class="loader w-8 h-8 sm:w-10 sm:h-10 border-4 border-t-amber-500 rounded-full"></div></div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            studentDashboard: () => `
+                <div class="animate-fade-in space-y-6 sm:space-y-8 mt-2">
+                    <!-- Welcome Banner -->
+                    <div class="glass-panel p-5 sm:p-6 md:p-8 rounded-3xl border border-indigo-500/20 relative overflow-hidden flex flex-col md:flex-row justify-between items-center gap-4 sm:gap-6 shadow-xl bg-gradient-to-br from-slate-900 to-slate-800 scroll-reveal text-center md:text-right">
+                        <div class="absolute -right-10 sm:-right-20 -top-10 sm:-top-20 w-48 sm:w-64 h-48 sm:h-64 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+                        <div class="absolute left-5 sm:left-10 bottom-0 opacity-10 pointer-events-none hidden sm:block">
+                            <i class="fas fa-book-open text-7xl sm:text-9xl"></i>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row items-center gap-3 sm:gap-5 relative z-10 w-full md:w-auto">
+                            <div class="relative shrink-0">
+                                <img src="${userData?.avatar || 'https://ui-avatars.com/api/?name='+userData?.name+'&background=8c4731&color=fff'}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-4 border-slate-800 shadow-[0_0_15px_rgba(185,145,89,0.5)] object-cover bg-white">
+                                <div class="absolute bottom-0 right-0 sm:right-0 w-4 h-4 sm:w-5 sm:h-5 bg-green-500 border-2 border-slate-800 rounded-full"></div>
+                            </div>
+                            <div>
+                                <h2 class="text-xl sm:text-2xl md:text-3xl font-black text-white mb-1">${t('welcome')} <span class="text-transparent bg-clip-text bg-gradient-to-l from-amber-400 to-yellow-200">${userData?.name.split(' ')[0]}</span>!</h2>
+                                <p class="text-xs sm:text-sm font-bold text-indigo-300 bg-indigo-500/10 inline-block px-3 py-1 rounded-full"><i class="fas fa-graduation-cap mr-1"></i> ${t('year'+userData?.year)}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-row md:flex-row gap-2 sm:gap-3 relative z-10 w-full md:w-auto mt-4 md:mt-0">
+                             <button onclick="window.setStudentTab('settings')" class="flex-1 md:flex-none px-4 sm:px-5 py-2.5 sm:py-3 flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition border border-slate-700 shadow-sm font-bold text-xs sm:text-sm"><i class="fas fa-cog"></i> الإعدادات</button>
+                             <button onclick="handleLogout()" class="flex-1 md:flex-none px-4 sm:px-5 py-2.5 sm:py-3 flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl transition border border-red-500/20 shadow-sm font-bold text-xs sm:text-sm"><i class="fas fa-sign-out-alt"></i> خروج</button>
+                        </div>
+                    </div>
+
+                    ${studentTab === 'settings' ? views.settings() : `
+                        <div>
+                            <div class="flex items-center justify-between mb-4 sm:mb-6 pl-2 scroll-reveal">
+                                <h3 class="text-lg sm:text-xl font-black text-white"><i class="fas fa-layer-group text-indigo-500 mr-2"></i> ${t('courses')}</h3>
+                            </div>
+                            <div id="studentCoursesList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                                <!-- Loaded via JS -->
+                            </div>
+                        </div>
+                    `}
+                </div>
+            `,
+            // التعديل الثاني: العودة للرئيسية دون عمل Refresh للصفحة الكاملة
+            courseView: () => `
+                <div class="animate-fade-in pb-10">
+                    <button onclick="window.exitCourse()" class="mb-4 sm:mb-6 px-3 sm:px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs sm:text-sm font-bold transition flex items-center gap-2 inline-flex w-auto border border-slate-700 scroll-reveal"><i class="fas fa-arrow-right rtl:rotate-180"></i> العودة للرئيسية</button>
+                    
+                    <div class="glass-panel p-6 sm:p-8 rounded-3xl mb-6 sm:mb-8 border border-indigo-500/30 bg-gradient-to-r from-indigo-900/40 to-slate-900 relative overflow-hidden scroll-reveal">
+                        <div class="absolute -right-5 sm:-right-10 -top-5 sm:-top-10 text-indigo-500/10"><i class="fas fa-book text-7xl sm:text-9xl"></i></div>
+                        <h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-white relative z-10">${selectedCourse.name}</h2>
+                        <p class="text-indigo-300 mt-2 font-semibold text-xs sm:text-sm relative z-10">استعرض المحاضرات، الامتحانات، والملازم الخاصة بالمادة.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+                        <div class="lg:col-span-2 space-y-4 sm:space-y-6">
+                             <div class="glass-panel p-4 sm:p-6 rounded-2xl border border-slate-700/50 scroll-reveal">
+                                <h3 class="text-lg sm:text-xl font-black mb-4 sm:mb-6 flex items-center gap-2"><div class="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center text-red-500 shrink-0"><i class="fab fa-youtube text-sm sm:text-base"></i></div> المحاضرات المرئية</h3>
+                                <div id="videoList" class="space-y-4 sm:space-y-6"></div>
+                             </div>
+                        </div>
+                        <div class="space-y-4 sm:space-y-6">
+                             <div class="glass-panel p-4 sm:p-6 rounded-2xl border border-amber-500/20 bg-amber-500/5 scroll-reveal">
+                                <h3 class="text-lg sm:text-xl font-black mb-4 flex items-center gap-2"><div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-500 shrink-0"><i class="fas fa-clipboard-check text-sm sm:text-base"></i></div> ${t('exams')}</h3>
+                                <div id="examList" class="space-y-2 sm:space-y-3"></div>
+                             </div>
+                             <div class="glass-panel p-4 sm:p-6 rounded-2xl border border-blue-500/20 bg-blue-500/5 scroll-reveal">
+                                <h3 class="text-lg sm:text-xl font-black mb-4 flex items-center gap-2"><div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 shrink-0"><i class="fas fa-folder-open text-sm sm:text-base"></i></div> ${t('files')}</h3>
+                                <div id="fileList" class="space-y-2 sm:space-y-3"></div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            examView: () => `
+                <div class="max-w-4xl mx-auto animate-fade-in relative pb-20 mt-2 sm:mt-4 px-2 sm:px-0">
+                    <div class="glass-panel p-5 sm:p-6 md:p-10 rounded-3xl border border-amber-500/30 shadow-2xl relative overflow-hidden bg-slate-900 scroll-reveal">
+                        <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-amber-400 to-orange-500"></div>
+                        <div class="flex justify-between items-start mb-6 sm:mb-8 border-b border-slate-800 pb-4 sm:pb-6">
+                            <div>
+                                <span class="text-[10px] sm:text-xs font-bold bg-amber-500/10 text-amber-500 px-2 sm:px-3 py-1 rounded-full mb-2 sm:mb-3 inline-block">تقييم أكاديمي</span>
+                                <h2 class="text-xl sm:text-2xl md:text-3xl font-black text-white leading-tight">${selectedExam.title}</h2>
+                            </div>
+                            <button onclick="window.exitExam()" class="w-8 h-8 sm:w-10 sm:h-10 bg-slate-800 rounded-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-red-500 transition shrink-0"><i class="fas fa-times"></i></button>
+                        </div>
+                        
+                        <!-- سجل المحاولات والدرجات أعلى الامتحان -->
+                        <div id="examHistorySection" class="mb-6 sm:mb-8 bg-slate-800/50 p-4 sm:p-5 rounded-xl border border-indigo-500/20 hidden animate-fade-in scroll-reveal">
+                            <h4 class="text-sm sm:text-base font-bold text-indigo-300 mb-3 flex justify-between items-center">
+                                <span><i class="fas fa-history mr-1"></i> محاولاتك السابقة للتقييم الذاتي (<span id="examAttemptsCount">0</span>/10)</span>
+                            </h4>
+                            <div id="examHistoryList" class="flex flex-wrap gap-2"></div>
+                            <div id="examWarningMax" class="hidden text-xs sm:text-sm text-red-400 font-bold mt-3 bg-red-500/10 p-2 sm:p-3 rounded-lg border border-red-500/20"><i class="fas fa-exclamation-triangle ml-1"></i> لقد استنفذت الحد الأقصى للمحاولات (10 مرات). يمكنك مراجعة الأسئلة فقط دون تقديم إجابات جديدة.</div>
+                        </div>
+
+                        <div id="examQuestions" class="space-y-6 sm:space-y-8"></div>
+                        
+                        <button id="submitExamBtn" onclick="submitExam()" class="mt-8 sm:mt-10 w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white font-black py-3 sm:py-4 rounded-xl hover:shadow-[0_10px_20px_rgba(245,158,11,0.3)] transition transform hover:-translate-y-1 text-base sm:text-lg scroll-reveal">تسليم الإجابات <i class="fas fa-paper-plane ml-2"></i></button>
+                        
+                        <div id="examResultPanel" class="hidden mt-8 sm:mt-10 p-6 sm:p-8 bg-slate-800/50 rounded-2xl border border-indigo-500/30 text-center animate-fade-in scroll-reveal">
+                            <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-indigo-500/20 rounded-full flex items-center justify-center mb-3 sm:mb-4 border-4 border-slate-800">
+                                <i class="fas fa-trophy text-2xl sm:text-3xl text-amber-400"></i>
+                            </div>
+                            <h3 class="text-xl sm:text-2xl font-black text-white mb-2">${t('examResult')}</h3>
+                            <div id="scoreDisplay" class="text-4xl sm:text-5xl font-black text-indigo-400 mb-2 w-full"></div>
+                        </div>
+                    </div>
+                </div>
+            `
+        };
+
+        let authMode = 'login';
+        let adminTab = 'requests';
+        let studentTab = 'home';
+        let selectedCourse = null;
+        let selectedExam = null;
+
+        window.setAuthMode = (mode) => { authMode = mode; router(); };
+        window.setAdminTab = (tab) => { adminTab = tab; router(); loadAdminData(); };
+        window.setStudentTab = (tab) => { studentTab = tab; router(); if(tab==='home') renderStudentCourses(); };
+        window.exitExam = () => { selectedExam = null; router(); };
+        window.exitCourse = () => { selectedCourse = null; selectedExam = null; router(); };
+        window.resetToLogin = () => { showSignupSuccess = false; window.setAuthMode('login'); };
+        window.closeSettings = () => { if(currentUser.role === 'admin') window.setAdminTab('requests'); else window.setStudentTab('home'); };
+
+        const handleAuth = async (e) => {
+            e.preventDefault();
+            const phoneInput = document.getElementById('phone');
+            const phoneVal = phoneInput.value;
+            const password = document.getElementById('password').value;
+
+            if (phoneVal !== ADMIN_PHONE && phoneVal !== ADMIN_EMAIL) {
+                if (!phoneVal.startsWith('010') && !phoneVal.startsWith('011') && !phoneVal.startsWith('012') && !phoneVal.startsWith('015')) {
+                    showToast("رقم الهاتف غير صحيح، يجب أن يبدأ بـ 010 أو 011 أو 012 أو 015", 'error');
+                    return;
+                }
+                if (phoneVal.length > 11) {
+                    showToast("الرقم أزيد من الحد الطبيعي (يجب أن يكون 11 رقم فقط)", 'error');
+                    return;
+                }
+                if (phoneVal.length < 11) {
+                    showToast("رقم الهاتف غير مكتمل (يجب أن يكون 11 رقم)", 'error');
+                    return;
+                }
+            }
+
+            const email = getAuthEmail(phoneVal); 
+
+            try {
+                if(authMode === 'login') {
+                    if((phoneVal === ADMIN_PHONE || phoneVal === ADMIN_EMAIL) && password === ADMIN_PASS) {
+                        userData = { name: "NOUR NADY", avatar: "IMG_1068.PNG.jpg", role: 'admin' };
+                        currentUser = { email: ADMIN_EMAIL, role: 'admin', uid: 'admin_001', name: "NOUR NADY" };
+                        
+                        try {
+                            const docSnap = await getDoc(doc(db, "users", 'admin_001'));
+                            if (docSnap.exists()) {
+                                userData = docSnap.data();
+                            }
+                        } catch (err) {
+                            console.log("Admin offline/mock login");
+                        }
+                        
+                        router(); return;
+                    }
+                    
+                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
+                    const docSnap = await getDoc(doc(db, "users", user.uid));
+                    
+                    if(docSnap.exists()) {
+                        const data = docSnap.data();
+                        if(data.status === 'pending') { await signOut(auth); showToast(t('waitApproval'), 'error'); }
+                        else if (data.status === 'rejected') { await signOut(auth); showToast("تم رفض الحساب من قبل الإدارة", 'error'); }
+                        else { userData = data; currentUser = user; router(); }
+                    } else {
+                        await signOut(auth);
+                        showToast("تمت إزالة حسابك بواسطة المشرف، يرجى إنشاء حساب من جديد.", "error");
+                    }
+                } else {
+                    if(document.getElementById('password').value !== document.getElementById('confirmPass').value) { showToast("كلمات المرور غير متطابقة", 'error'); return; }
+                    isSigningUp = true;
+                    
+                    try {
+                        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                        const user = userCredential.user;
+                        await setDoc(doc(db, "users", user.uid), {
+                            name: document.getElementById('name').value,
+                            phone: phoneVal,
+                            year: document.getElementById('year').value,
+                            email: email,
+                            status: 'pending',
+                            role: 'student',
+                            avatar: '',
+                            examAttempts: {}, 
+                            createdAt: new Date().toISOString()
+                        });
+                        showSignupSuccess = true; isSigningUp = false; await signOut(auth);
+                    } catch (signupError) {
+                        if (signupError.code === 'auth/email-already-in-use') {
+                            try {
+                                const loginCred = await signInWithEmailAndPassword(auth, email, password);
+                                const docSnap = await getDoc(doc(db, "users", loginCred.user.uid));
+                                if (!docSnap.exists()) {
+                                    await setDoc(doc(db, "users", loginCred.user.uid), {
+                                        name: document.getElementById('name').value,
+                                        phone: phoneVal,
+                                        year: document.getElementById('year').value,
+                                        email: email,
+                                        status: 'pending',
+                                        role: 'student',
+                                        avatar: '',
+                                        examAttempts: {},
+                                        createdAt: new Date().toISOString()
+                                    });
+                                    showSignupSuccess = true; isSigningUp = false; await signOut(auth);
+                                    router();
+                                    return;
+                                } else {
+                                    throw signupError;
+                                }
+                            } catch (e) {
+                                throw signupError;
+                            }
+                        } else {
+                            throw signupError;
+                        }
+                    }
+                }
+            } catch (error) { 
+                isSigningUp = false; 
+                let errorMsg = "حدث خطأ غير متوقع، يرجى المحاولة لاحقاً.";
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                    case 'auth/invalid-email':
+                        errorMsg = "رقم الهاتف هذا غير مسجل لدينا، يرجى التأكد منه أو إنشاء حساب.";
+                        break;
+                    case 'auth/wrong-password':
+                        errorMsg = "كلمة المرور غير صحيحة، يرجى المحاولة مرة أخرى.";
+                        break;
+                    case 'auth/invalid-credential':
+                    case 'auth/invalid-login-credentials':
+                        errorMsg = "رقم الهاتف أو كلمة المرور غير صحيحة.";
+                        break;
+                    case 'auth/email-already-in-use':
+                        errorMsg = "هذا الرقم مسجل مسبقاً. لتجديد حسابك المحذوف استخدم نفس كلمة المرور القديمة.";
+                        break;
+                    case 'auth/weak-password':
+                        errorMsg = "كلمة المرور ضعيفة جداً، يرجى كتابة 6 أحرف أو أرقام على الأقل.";
+                        break;
+                    case 'auth/network-request-failed':
+                        errorMsg = "لا يوجد اتصال بالإنترنت، يرجى التحقق من الشبكة.";
+                        break;
+                }
+                showToast(errorMsg, 'error'); 
+            }
+        };
+
+        window.handleLogout = async () => { if (notifUnsubscribe) notifUnsubscribe(); await signOut(auth); currentUser = null; userData = null; selectedCourse = null; router(); };
+
+        window.handleImageUpload = async (input) => {
+            if(input.files && input.files[0]) {
+                const file = input.files[0];
+                if(file.size > 20 * 1024 * 1024) { showToast("حجم الصورة كبير جداً (أقصى حد 20MB)", "error"); return; }
+                showToast(t('uploading'), 'info');
+                const base64 = await compressImage(file);
+                document.getElementById('profilePreview').src = base64;
+                
+                if (!userData) userData = {};
+                userData.avatar = base64; 
+            }
+        };
+
+        window.saveSettings = async () => {
+            const newName = document.getElementById('settingName').value;
+            const newPass = document.getElementById('settingPass').value;
+            const confirmPass = document.getElementById('settingPassConfirm').value;
+            
+            if(newPass || confirmPass) {
+                if(newPass !== confirmPass) {
+                    showToast("كلمات المرور الجديدة غير متطابقة!", "error");
+                    return;
+                }
+                if(newPass.length < 6) {
+                    showToast("يجب أن تتكون كلمة المرور من 6 أحرف/أرقام على الأقل", "error");
+                    return;
+                }
+            }
+
+            try {
+                if (!userData) userData = {}; 
+                const updates = { name: newName };
+                if(userData.avatar) updates.avatar = userData.avatar;
+                
+                await setDoc(doc(db, "users", currentUser.uid), updates, { merge: true });
+                if(newPass) await updatePassword(currentUser, newPass);
+                
+                userData.name = newName;
+                showToast("تم حفظ التعديلات بنجاح", "success");
+                
+                if(currentUser.role === 'admin') window.setAdminTab('settings');
+                else window.setStudentTab('home');
+
+            } catch(e) { showToast("حدث خطأ: " + e.message, "error"); }
+        };
+
+        const loadAdminData = async () => {
+            const container = document.getElementById('adminContent');
+            if(!container) return;
+            
+            if(adminTab === 'settings') { container.innerHTML = views.settings(); setTimeout(window.applyScrollAnimations, 50); return; }
+
+            if(adminTab === 'stats') {
+                 const q = query(collection(db, "activity_logs"), orderBy("date", "desc"));
+                 const snap = await getDocs(q);
+                 let html = `<div class="bg-slate-800/40 p-4 sm:p-6 md:p-8 rounded-2xl border border-indigo-500/20 scroll-reveal">
+                     <h3 class="text-lg sm:text-xl text-white mb-4 sm:mb-6 font-black flex items-center gap-2"><div class="w-8 h-8 rounded bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0"><i class="fas fa-chart-line"></i></div> إحصائيات نشاط الطلاب</h3>
+                     <div class="space-y-3 sm:space-y-4 max-h-[400px] sm:max-h-[500px] overflow-y-auto custom-scrollbar pr-2">`;
+                 
+                 if(snap.empty) { 
+                     html += `<div class="text-center py-10 text-slate-500"><i class="fas fa-box-open text-3xl sm:text-4xl mb-3 opacity-50"></i><p class="text-sm sm:text-base">لا توجد بيانات أو نشاطات حتى الآن.</p></div>`; 
+                 } else {
+                     snap.forEach(doc => {
+                         const data = doc.data();
+                         const d = new Date(data.date).toLocaleString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                         if(data.type === 'video') {
+                             html += `
+                             <div class="bg-slate-800/80 p-3 sm:p-4 rounded-xl border border-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 scroll-reveal">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0 border border-blue-500/20"><i class="fas fa-play text-xs sm:text-sm"></i></div>
+                                    <div>
+                                        <h4 class="font-bold text-white text-xs sm:text-sm">${data.userName}</h4>
+                                        <p class="text-[10px] sm:text-xs text-slate-400 mt-1"><span class="text-blue-300">شاهد محاضرة:</span> ${data.videoTitle}</p>
+                                    </div>
+                                </div>
+                                <div class="text-[9px] sm:text-[10px] text-slate-500 font-semibold bg-slate-900 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg shrink-0 text-right sm:text-center w-fit">${d}</div>
+                             </div>`;
+                         } else if (data.type === 'exam') {
+                             const isPass = data.score >= (data.maxScore / 2);
+                             const color = isPass ? 'green' : 'red';
+                             html += `
+                             <div class="bg-slate-800/80 p-3 sm:p-4 rounded-xl border border-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 scroll-reveal">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-${color}-500/10 text-${color}-400 flex items-center justify-center shrink-0 border border-${color}-500/20"><i class="fas fa-clipboard-check text-xs sm:text-sm"></i></div>
+                                    <div>
+                                        <h4 class="font-bold text-white text-xs sm:text-sm">${data.userName}</h4>
+                                        <p class="text-[10px] sm:text-xs text-slate-400 mt-1"><span class="text-amber-400">أتم تقييم:</span> ${data.examTitle} <span class="font-bold text-${color}-400 mr-1">(النتيجة: ${data.score}/${data.maxScore})</span></p>
+                                    </div>
+                                </div>
+                                <div class="text-[9px] sm:text-[10px] text-slate-500 font-semibold bg-slate-900 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg shrink-0 text-right sm:text-center w-fit">${d}</div>
+                             </div>`;
+                         }
+                     });
+                 }
+                 html += `</div></div>`;
+                 container.innerHTML = html;
+                 setTimeout(window.applyScrollAnimations, 50);
+                 return;
+            }
+
+            if(adminTab === 'notifications') {
+                 const q = query(collection(db, "notifications"), orderBy("date", "desc"));
+                 const snapshot = await getDocs(q);
+                 let html = `<div class="bg-slate-800/50 p-4 sm:p-6 rounded-2xl border border-slate-700 mb-4 sm:mb-6 scroll-reveal"><h3 class="font-bold text-white mb-3 sm:mb-4 text-sm sm:text-base"><i class="fas fa-paper-plane text-indigo-400 mr-2"></i> إرسال إشعار جديد</h3><div class="grid grid-cols-1 gap-3 sm:gap-4"><input type="text" id="manualNotifTitle" placeholder="${t('notifTitle')}" class="edu-input text-sm sm:text-base"><textarea id="manualNotifBody" placeholder="${t('notifBody')}" class="edu-input h-20 sm:h-24 resize-none text-sm sm:text-base"></textarea></div><button onclick="window.sendManualNotification()" class="mt-3 sm:mt-4 bg-indigo-600 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl w-full font-bold hover:bg-indigo-500 transition text-sm sm:text-base">إرسال الإشعار <i class="fas fa-bullhorn ml-2"></i></button></div><div class="space-y-2 sm:space-y-3">`;
+                 snapshot.forEach(doc => { html += `<div class="bg-slate-800/30 p-3 sm:p-4 rounded-xl border border-slate-700 flex justify-between items-center group scroll-reveal"><div><h4 class="font-bold text-indigo-300 text-sm sm:text-base">${doc.data().title}</h4><p class="text-xs sm:text-sm text-slate-400 mt-1">${doc.data().message}</p></div><button onclick="window.deleteNotification('${doc.id}')" class="w-7 h-7 sm:w-8 sm:h-8 rounded bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition sm:opacity-0 group-hover:opacity-100 flex items-center justify-center shrink-0"><i class="fas fa-trash text-xs sm:text-sm"></i></button></div>`; });
+                 container.innerHTML = html + '</div>';
+                 setTimeout(window.applyScrollAnimations, 50);
+                 return;
+            }
+            if(adminTab === 'requests') {
+                const q = query(collection(db, "users"), where("status", "==", "pending"));
+                const snap = await getDocs(q);
+                let html = snap.empty ? `<div class="text-center py-10 text-slate-500 scroll-reveal"><i class="fas fa-inbox text-3xl sm:text-4xl mb-3 opacity-50"></i><p class="text-sm sm:text-base">${t('noData')}</p></div>` : '<div class="space-y-3 sm:space-y-4">';
+                snap.forEach(doc => { html += `<div class="bg-slate-800/50 p-3 sm:p-4 rounded-xl border border-slate-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 scroll-reveal"><div><h4 class="font-bold text-white flex items-center gap-2 text-sm sm:text-base"><i class="fas fa-user-graduate text-indigo-400"></i> ${doc.data().name}</h4><p class="text-xs sm:text-sm text-slate-400 mt-1"><i class="fas fa-phone text-[10px] sm:text-xs mr-1"></i> ${doc.data().phone}</p></div><div class="flex gap-2 w-full sm:w-auto"><button onclick="updateUserStatus('${doc.id}', 'approved')" class="flex-1 sm:flex-none bg-green-500/10 text-green-400 hover:bg-green-500 hover:text-white border border-green-500/50 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-bold transition text-xs sm:text-sm">قبول <i class="fas fa-check"></i></button><button onclick="updateUserStatus('${doc.id}', 'rejected')" class="flex-1 sm:flex-none bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white border border-red-500/50 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-bold transition text-xs sm:text-sm">رفض <i class="fas fa-times"></i></button></div></div>`; });
+                container.innerHTML = html + '</div>';
+                setTimeout(window.applyScrollAnimations, 50);
+            }
+            if(adminTab === 'students') {
+                 const q = query(collection(db, "users"), where("role", "==", "student"));
+                 const snap = await getDocs(q);
+                 let html = snap.empty ? `<div class="text-center py-10 text-slate-500 scroll-reveal"><i class="fas fa-users text-3xl sm:text-4xl mb-3 opacity-50"></i><p class="text-sm sm:text-base">${t('noData')}</p></div>` : '<div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">';
+                 snap.forEach(doc => { const d = doc.data(); html += `<div class="bg-slate-800/30 p-3 sm:p-4 rounded-xl border border-slate-700 relative group flex items-center justify-between scroll-reveal"><div class="flex items-center gap-3 sm:gap-4"><img src="${d.avatar || 'https://ui-avatars.com/api/?name='+d.name+'&background=8c4731&color=fff'}" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-indigo-500/30 object-cover bg-slate-800 shrink-0"><div><h4 class="font-bold text-white text-sm sm:text-base">${d.name}</h4><div class="flex flex-wrap gap-1.5 mt-1"><span class="text-[10px] sm:text-xs text-indigo-300 font-semibold bg-indigo-500/10 inline-block px-2 py-0.5 rounded">${t('year'+d.year)}</span><span class="text-[10px] sm:text-xs text-slate-300 font-semibold bg-slate-700/50 inline-block px-2 py-0.5 rounded dir-ltr text-right"><i class="fas fa-phone text-[9px] mr-1"></i>${d.phone || ''}</span></div></div></div><button onclick="window.deleteUser('${doc.id}')" class="w-7 h-7 sm:w-8 sm:h-8 rounded bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition sm:opacity-0 group-hover:opacity-100 flex items-center justify-center shrink-0"><i class="fas fa-user-minus text-xs sm:text-sm"></i></button></div>`; });
+                 container.innerHTML = html + '</div>';
+                 setTimeout(window.applyScrollAnimations, 50);
+            }
+            if(adminTab === 'courses') {
+                const snap = await getDocs(collection(db, "courses"));
+                let html = `<div class="mb-4 sm:mb-6 scroll-reveal"><button onclick="window.addNewCourse()" class="bg-indigo-600 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold hover:bg-indigo-500 transition shadow-lg text-sm sm:text-base w-full sm:w-auto"><i class="fas fa-plus-circle mr-2"></i> ${t('addCourse')}</button></div><div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">`;
+                snap.forEach(docSnap => { 
+                    const docId = docSnap.id;
+                    const data = docSnap.data();
+                    html += `
+                    <div class="bg-slate-800/40 p-4 sm:p-5 rounded-2xl border border-slate-700 relative group scroll-reveal">
+                        <div class="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4 border-b border-slate-700/50 pb-2 sm:pb-3">
+                            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-400 shrink-0"><i class="fas fa-book-open text-sm sm:text-base"></i></div>
+                            <h4 class="font-black text-base sm:text-lg text-white">${data.name}</h4>
+                        </div>
+                        
+                        <div class="mt-3 sm:mt-4 flex flex-col gap-2 sm:gap-3 bg-slate-900/50 p-3 sm:p-4 rounded-xl border border-slate-800">
+                            <p class="text-[10px] sm:text-xs font-bold text-slate-400 mb-0.5 sm:mb-1"><i class="fab fa-youtube text-red-500 mr-1"></i> إضافة محاضرة يوتيوب</p>
+                            <input type="text" placeholder="رابط اليوتيوب (YouTube Link)" id="vid-${docId}" class="edu-input py-1.5 sm:py-2 text-xs sm:text-sm">
+                            <input type="text" placeholder="عنوان المحاضرة" id="title-${docId}" class="edu-input py-1.5 sm:py-2 text-xs sm:text-sm">
+                            <button onclick="window.addVideoToCourse('${docId}')" class="text-xs sm:text-sm bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 py-1.5 sm:py-2 rounded-lg hover:bg-indigo-600 hover:text-white transition font-bold mt-1">إضافة المحاضرة <i class="fas fa-plus ml-1"></i></button>
+                        </div>
+                        
+                        <div class="mt-3 sm:mt-4 space-y-1.5 sm:space-y-2 max-h-40 sm:max-h-48 overflow-y-auto custom-scrollbar pr-1">
+                            <p class="text-[10px] sm:text-xs text-indigo-300 font-bold mb-1.5 sm:mb-2 bg-indigo-500/10 px-2 py-1 rounded inline-block">المحتوى الحالي:</p>
+                            ${(data.videos || []).map(v => `
+                                <div class="flex justify-between items-center text-xs sm:text-sm bg-slate-800/80 p-2 sm:p-2.5 rounded-lg border border-slate-700">
+                                    <span class="truncate w-32 sm:w-40 text-slate-300 font-semibold"><i class="fab fa-youtube text-red-500 mr-1 sm:mr-2"></i> ${v.title}</span>
+                                    <button onclick="window.deleteVideo('${docId}', '${v.id}')" class="text-slate-500 hover:text-red-500 transition shrink-0"><i class="fas fa-trash"></i></button>
+                                </div>
+                            `).join('')}
+                            ${(data.files || []).map(f => `
+                                <div class="flex justify-between items-center text-xs sm:text-sm bg-slate-800/80 p-2 sm:p-2.5 rounded-lg border border-slate-700">
+                                    <span class="truncate w-32 sm:w-40 text-slate-300 font-semibold"><i class="fas fa-file-pdf text-blue-400 mr-1 sm:mr-2"></i> ${f.name}</span>
+                                    <button onclick="window.deleteFile('${docId}', '${f.id}')" class="text-slate-500 hover:text-red-500 transition shrink-0"><i class="fas fa-trash"></i></button>
+                                </div>
+                            `).join('')}
+                            ${(data.exams || []).map(e => `
+                                <div class="flex justify-between items-center text-xs sm:text-sm bg-slate-800/80 p-2 sm:p-2.5 rounded-lg border border-slate-700">
+                                    <span class="truncate w-32 sm:w-40 text-slate-300 font-semibold"><i class="fas fa-clipboard-check text-amber-500 mr-1 sm:mr-2"></i> ${e.title}</span>
+                                    <button onclick="window.deleteExam('${docId}', '${e.id}')" class="text-slate-500 hover:text-red-500 transition shrink-0"><i class="fas fa-trash"></i></button>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <button onclick="window.deleteCourse('${docId}')" class="absolute top-3 left-3 sm:top-4 sm:left-4 w-7 h-7 sm:w-8 sm:h-8 rounded bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition sm:opacity-0 group-hover:opacity-100 flex items-center justify-center"><i class="fas fa-trash-alt text-xs sm:text-sm"></i></button>
+                    </div>`; 
+                });
+                container.innerHTML = html + '</div>';
+                setTimeout(window.applyScrollAnimations, 50);
+            }
+            if(adminTab === 'exams') {
+                 currentExamQuestions = [];
+                 const snap = await getDocs(collection(db, "courses"));
+                 let options = '<option value="" disabled selected>-- اختر المقرر --</option>'; 
+                 snap.forEach(d => options += `<option value="${d.id}">${d.data().name}</option>`);
+                 
+                 container.innerHTML = `
+                    <div class="space-y-4 sm:space-y-6 max-w-3xl">
+                        <div class="bg-slate-800/40 p-4 sm:p-6 md:p-8 rounded-2xl border border-amber-500/20 scroll-reveal">
+                            <h3 class="text-lg sm:text-xl text-white mb-4 sm:mb-6 font-black flex items-center gap-2"><div class="w-8 h-8 rounded bg-amber-500/20 text-amber-500 flex items-center justify-center shrink-0"><i class="fas fa-pen-nib"></i></div> إنشاء تقييم جديد</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 mb-6 sm:mb-8">
+                                <div>
+                                    <label class="block text-xs sm:text-sm font-bold text-slate-400 mb-1.5 sm:mb-2 pl-1">${t('courses')}</label>
+                                    <select id="examCourse" class="edu-input text-xs sm:text-sm text-slate-300 appearance-none">${options}</select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs sm:text-sm font-bold text-slate-400 mb-1.5 sm:mb-2 pl-1">عنوان التقييم</label>
+                                    <input type="text" id="examTitle" placeholder="مثال: امتحان الميدتيرم" class="edu-input text-xs sm:text-sm">
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-900/50 p-4 sm:p-6 rounded-xl border border-slate-700 space-y-4 sm:space-y-5">
+                                <h4 class="text-indigo-400 font-bold border-b border-slate-700/50 pb-2 text-sm sm:text-base"><i class="fas fa-plus-circle mr-1"></i> إضافة سؤال للمسودة</h4>
+                                
+                                <div class="grid grid-cols-1 gap-3 sm:gap-4">
+                                    <select id="qType" onchange="window.renderQuestionInputs()" class="edu-input text-xs sm:text-sm text-slate-300 appearance-none">
+                                        <option value="mcq">اختيار من متعدد (MCQ)</option>
+                                        <option value="tf">صح وخطأ (True/False)</option>
+                                        <option value="essay">سؤال مقالي (Essay)</option>
+                                    </select>
+                                    
+                                    <input type="text" id="qText" placeholder="اكتب نص السؤال هنا..." class="edu-input font-bold text-sm sm:text-base">
+                                    
+                                    <div id="qInputs" class="space-y-3 sm:space-y-4 p-3 sm:p-4 bg-slate-800/80 rounded-xl border border-slate-600"></div>
+
+                                    <input type="text" id="qExplain" placeholder="تفسير أو شرح الإجابة (اختياري، يظهر للطالب بعد الحل)" class="edu-input text-xs sm:text-sm text-amber-100 bg-amber-900/10 border-amber-500/20 placeholder-amber-500/50">
+                                </div>
+
+                                <button onclick="window.addQuestionToTempList()" class="w-full py-2.5 sm:py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-bold transition border border-slate-600 flex items-center justify-center gap-2 text-sm sm:text-base">
+                                    <i class="fas fa-level-down-alt rtl:-scale-x-100"></i> ${t('addQuestion')}
+                                </button>
+                            </div>
+
+                            <div class="mt-6 sm:mt-8">
+                                <h4 class="text-xs sm:text-sm font-bold text-slate-400 mb-2 sm:mb-3 flex justify-between items-center"><span>الأسئلة في المسودة</span> <span class="bg-indigo-600 text-white px-2 py-0.5 rounded-md text-[10px] sm:text-xs" id="qTempCount">0</span></h4>
+                                <div id="tempQuestionsList" class="space-y-2 max-h-48 sm:max-h-60 overflow-y-auto mb-4 sm:mb-6 custom-scrollbar pr-1 sm:pr-2"></div>
+                                <button onclick="window.createExam()" class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-black py-3 sm:py-4 rounded-xl hover:shadow-[0_10px_20px_rgba(16,185,129,0.3)] transition text-sm sm:text-lg flex justify-center items-center gap-2">
+                                    اعتماد وحفظ التقييم <i class="fas fa-check-circle"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                 `;
+                 setTimeout(window.renderQuestionInputs, 100); 
+                 setTimeout(window.applyScrollAnimations, 50);
+            }
+            if(adminTab === 'files') {
+                 const snap = await getDocs(collection(db, "courses"));
+                 let options = '<option value="" disabled selected>-- اختر المقرر --</option>'; snap.forEach(d => options += `<option value="${d.id}">${d.data().name}</option>`);
+                 container.innerHTML = `<div class="bg-slate-800/40 p-4 sm:p-6 md:p-8 rounded-2xl border border-blue-500/20 max-w-xl scroll-reveal"><h3 class="text-lg sm:text-xl text-white mb-4 sm:mb-6 font-black flex items-center gap-2"><div class="w-8 h-8 rounded bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0"><i class="fas fa-file-upload text-sm sm:text-base"></i></div> رفع ملزمة / ملف</h3><div class="space-y-3 sm:space-y-4"><select id="fileCourse" class="edu-input appearance-none text-xs sm:text-sm text-slate-300">${options}</select><input type="text" id="fileName" placeholder="اسم الملف (مثال: ملخص الفصل الأول)" class="edu-input text-xs sm:text-sm"><input type="url" id="fileUrl" placeholder="رابط الملف (Google Drive, OneDrive...)" class="edu-input dir-ltr text-left text-xs sm:text-sm"><button onclick="window.addFileToCourse()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-xl w-full font-bold transition mt-1 sm:mt-2 shadow-lg shadow-blue-500/30 text-sm sm:text-base">رفع وإضافة الملف <i class="fas fa-cloud-upload-alt ml-2"></i></button></div></div>`;
+                 setTimeout(window.applyScrollAnimations, 50);
+            }
+        };
+
+        window.renderQuestionInputs = () => {
+            const type = document.getElementById('qType').value;
+            const container = document.getElementById('qInputs');
+            
+            if (type === 'mcq') {
+                container.innerHTML = `
+                    <p class="text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 sm:mb-2">اكتب الاختيارات وحدد الإجابة الصحيحة عبر الزر الجانبي:</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3">
+                        <div class="flex gap-2 sm:gap-3 items-center bg-slate-900 p-2 rounded-lg border border-slate-700"><input type="radio" name="mcqCorrect" value="0" class="w-4 h-4 sm:w-5 sm:h-5 accent-green-500 cursor-pointer shrink-0"><input type="text" id="opt0" placeholder="الخيار الأول" class="flex-1 bg-transparent border-none text-white focus:outline-none text-xs sm:text-sm w-full"></div>
+                        <div class="flex gap-2 sm:gap-3 items-center bg-slate-900 p-2 rounded-lg border border-slate-700"><input type="radio" name="mcqCorrect" value="1" class="w-4 h-4 sm:w-5 sm:h-5 accent-green-500 cursor-pointer shrink-0"><input type="text" id="opt1" placeholder="الخيار الثاني" class="flex-1 bg-transparent border-none text-white focus:outline-none text-xs sm:text-sm w-full"></div>
+                        <div class="flex gap-2 sm:gap-3 items-center bg-slate-900 p-2 rounded-lg border border-slate-700"><input type="radio" name="mcqCorrect" value="2" class="w-4 h-4 sm:w-5 sm:h-5 accent-green-500 cursor-pointer shrink-0"><input type="text" id="opt2" placeholder="الخيار الثالث" class="flex-1 bg-transparent border-none text-white focus:outline-none text-xs sm:text-sm w-full"></div>
+                        <div class="flex gap-2 sm:gap-3 items-center bg-slate-900 p-2 rounded-lg border border-slate-700"><input type="radio" name="mcqCorrect" value="3" class="w-4 h-4 sm:w-5 sm:h-5 accent-green-500 cursor-pointer shrink-0"><input type="text" id="opt3" placeholder="الخيار الرابع" class="flex-1 bg-transparent border-none text-white focus:outline-none text-xs sm:text-sm w-full"></div>
+                    </div>
+                `;
+            } else if (type === 'tf') {
+                container.innerHTML = `
+                    <p class="text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 sm:mb-2">اختر الإجابة الصحيحة:</p>
+                    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                        <label class="flex-1 flex items-center justify-center gap-2 cursor-pointer bg-slate-900 hover:bg-slate-800 p-2.5 sm:p-3 rounded-lg border border-slate-700 transition"><input type="radio" name="tfCorrect" value="True" class="w-4 h-4 sm:w-5 sm:h-5 accent-green-500 shrink-0"> <span class="font-bold text-green-400 text-sm sm:text-base">عبارة صحيحة <i class="fas fa-check ml-1"></i></span></label>
+                        <label class="flex-1 flex items-center justify-center gap-2 cursor-pointer bg-slate-900 hover:bg-slate-800 p-2.5 sm:p-3 rounded-lg border border-slate-700 transition"><input type="radio" name="tfCorrect" value="False" class="w-4 h-4 sm:w-5 sm:h-5 accent-red-500 shrink-0"> <span class="font-bold text-red-400 text-sm sm:text-base">عبارة خاطئة <i class="fas fa-times ml-1"></i></span></label>
+                    </div>
+                `;
+            } else if (type === 'essay') {
+                container.innerHTML = `
+                    <p class="text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 sm:mb-2">الإجابة النموذجية (ستظهر للطالب كمرجع بعد التسليم):</p>
+                    <textarea id="essayModel" placeholder="اكتب الإجابة النموذجية أو النقاط الأساسية المطلوبة..." class="edu-input h-20 sm:h-24 resize-none text-xs sm:text-sm"></textarea>
+                `;
+            }
+        };
+
+        window.addQuestionToTempList = () => {
+            const q = document.getElementById('qText').value;
+            const type = document.getElementById('qType').value;
+            const explain = document.getElementById('qExplain').value;
+            let questionObj = { q, type, explain, id: Date.now() };
+
+            if(!q) { showToast("يرجى كتابة نص السؤال", "error"); return; }
+
+            if (type === 'mcq') {
+                const opts = [
+                    document.getElementById('opt0').value,
+                    document.getElementById('opt1').value,
+                    document.getElementById('opt2').value,
+                    document.getElementById('opt3').value
+                ];
+                const correctIdx = document.querySelector('input[name="mcqCorrect"]:checked')?.value;
+                if(opts.some(o => !o) || !correctIdx) { showToast("يرجى إكمال جميع الاختيارات وتحديد الإجابة الصحيحة", "error"); return; }
+                questionObj.options = opts;
+                questionObj.answer = opts[correctIdx];
+            } else if (type === 'tf') {
+                const correct = document.querySelector('input[name="tfCorrect"]:checked')?.value;
+                if(!correct) { showToast("يرجى تحديد ما إذا كانت العبارة صحيحة أم خاطئة", "error"); return; }
+                questionObj.options = ['True', 'False'];
+                questionObj.answer = correct;
+            } else {
+                const model = document.getElementById('essayModel').value;
+                if(!model) { showToast("يرجى كتابة الإجابة النموذجية", "error"); return; }
+                questionObj.answer = model; 
+            }
+
+            currentExamQuestions.push(questionObj);
+            document.getElementById('qTempCount').textContent = currentExamQuestions.length;
+            
+            const typeLabels = { 'mcq': 'MCQ', 'tf': 'T/F', 'essay': 'مقال' };
+            const typeColors = { 'mcq': 'bg-blue-500/20 text-blue-400', 'tf': 'bg-purple-500/20 text-purple-400', 'essay': 'bg-amber-500/20 text-amber-400' };
+            
+            document.getElementById('tempQuestionsList').innerHTML += `
+                <div class="bg-slate-800 p-2.5 sm:p-3 rounded-xl border border-slate-700 flex justify-between items-center shadow-sm">
+                    <span class="text-xs sm:text-sm font-semibold text-white truncate w-3/4 pr-1 sm:pr-2">${q}</span>
+                    <span class="text-[8px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded ${typeColors[type]} uppercase tracking-wider shrink-0">${typeLabels[type]}</span>
+                </div>`;
+            
+            document.getElementById('qText').value = '';
+            document.getElementById('qExplain').value = '';
+            window.renderQuestionInputs();
+        };
+
+        window.sendSystemNotification = async (title, message, type = 'info') => {
+            try {
+                await addDoc(collection(db, "notifications"), {
+                    title: title,
+                    message: message,
+                    type: type,
+                    date: new Date().toISOString(),
+                    readBy: []
+                });
+            } catch (error) {
+                console.error("Error adding notification: ", error);
+            }
+        };
+
+        window.sendManualNotification = async () => {
+            const title = document.getElementById('manualNotifTitle').value;
+            const body = document.getElementById('manualNotifBody').value;
+            if(!title || !body) { showToast("يرجى تعبئة الحقول", "error"); return; }
+            await sendSystemNotification(title, body, 'alert'); 
+            showToast("تم إرسال الإشعار لجميع الطلاب", "success"); 
+            loadAdminData();
+        };
+        window.deleteNotification = async (id) => { await deleteDoc(doc(db, "notifications", id)); loadAdminData(); };
+        window.updateUserStatus = async (uid, status) => { await updateDoc(doc(db, "users", uid), { status: status }); loadAdminData(); };
+        
+        window.deleteUser = async (id) => { 
+            const confirmDel = await showCustomModal("تأكيد الحذف", "هل أنت متأكد من إزالة هذا الطالب نهائياً من قاعدة البيانات؟ لن يتمكن من الدخول مجدداً.", false, 'danger');
+            if(confirmDel) {
+                try {
+                    await deleteDoc(doc(db, "users", id)); 
+                    showToast("تم إزالة الطالب بنجاح", "success");
+                    loadAdminData(); 
+                } catch(e) {
+                    showToast("حدث خطأ: " + e.message, "error");
+                }
+            }
+        };
+
+        window.addNewCourse = async () => { 
+            const name = await showCustomModal("إضافة مقرر جديد", "يرجى كتابة اسم المقرر الدراسي الجديد:", true, 'info');
+            if(name && name.trim() !== "") { 
+                await addDoc(collection(db, "courses"), { name, videos: [], files: [], exams: [] }); 
+                loadAdminData(); 
+            } 
+        };
+        
+        window.deleteCourse = async (id) => { 
+            const confirmDel = await showCustomModal("حذف المقرر", "تحذير: سيتم حذف المقرر بجميع محتوياته (فيديوهات، ملفات، امتحانات) بشكل نهائي. هل أنت متأكد؟", false, 'danger');
+            if(confirmDel) { 
+                await deleteDoc(doc(db, "courses", id)); 
+                loadAdminData(); 
+            } 
+        };
+        
+        window.deleteVideo = async (courseId, videoId) => {
+            const confirmDel = await showCustomModal("حذف المحاضرة", "هل أنت متأكد من إزالة هذه المحاضرة المرئية؟", false, 'danger');
+            if(!confirmDel) return;
+            const ref = doc(db, "courses", courseId);
+            const snap = await getDoc(ref);
+            if(snap.exists()) {
+                const videos = snap.data().videos || [];
+                const updated = videos.filter(v => v.id !== videoId);
+                await updateDoc(ref, { videos: updated });
+                showToast("تم الحذف بنجاح", "success");
+                loadAdminData();
+            }
+        };
+
+        window.deleteFile = async (courseId, fileId) => {
+            const confirmDel = await showCustomModal("حذف الملف", "هل أنت متأكد من إزالة هذه الملزمة / الملف؟", false, 'danger');
+            if(!confirmDel) return;
+            const ref = doc(db, "courses", courseId);
+            const snap = await getDoc(ref);
+            if(snap.exists()) {
+                const files = snap.data().files || [];
+                const updated = files.filter(f => f.id !== fileId);
+                await updateDoc(ref, { files: updated });
+                showToast("تم الحذف بنجاح", "success");
+                loadAdminData();
+            }
+        };
+
+        window.deleteExam = async (courseId, examId) => {
+            const confirmDel = await showCustomModal("حذف التقييم", "هل أنت متأكد من إزالة هذا الامتحان بجميع أسئلته؟", false, 'danger');
+            if(!confirmDel) return;
+            const ref = doc(db, "courses", courseId);
+            const snap = await getDoc(ref);
+            if(snap.exists()) {
+                const exams = snap.data().exams || [];
+                const updated = exams.filter(e => e.id !== examId);
+                await updateDoc(ref, { exams: updated });
+                showToast("تم الحذف بنجاح", "success");
+                loadAdminData();
+            }
+        };
+
+        window.addVideoToCourse = async (id) => {
+             const link = document.getElementById(`vid-${id}`).value;
+             const title = document.getElementById(`title-${id}`).value;
+             if(!link) return;
+             let vId = link.includes('v=') ? link.split('v=')[1].split('&')[0] : link.split('/').pop();
+             await updateDoc(doc(db, "courses", id), { videos: arrayUnion({ id: Date.now().toString(), title: title||'محاضرة جديدة', url: `https://www.youtube.com/embed/${vId}`, originalLink: link }) });
+             await sendSystemNotification("محاضرة جديدة", `تمت إضافة فيديو: ${title}`, "info"); loadAdminData();
+        };
+        window.addFileToCourse = async () => {
+             const id = document.getElementById('fileCourse').value;
+             const name = document.getElementById('fileName').value;
+             const url = document.getElementById('fileUrl').value;
+             if(!id || !url || !name) { showToast("يرجى إكمال البيانات", "error"); return; }
+             await updateDoc(doc(db, "courses", id), { files: arrayUnion({ id: Date.now().toString(), name, url, date: new Date().toISOString() }) });
+             await sendSystemNotification("ملف جديد", `تم رفع ملزمة: ${name}`, "success"); showToast("تم إضافة الملف بنجاح", 'success'); loadAdminData();
+        };
+        window.createExam = async () => {
+            const id = document.getElementById('examCourse').value;
+            const title = document.getElementById('examTitle').value;
+            if(!id || !title || currentExamQuestions.length === 0) { showToast("يرجى إكمال البيانات وإضافة أسئلة", "error"); return; }
+            await updateDoc(doc(db, "courses", id), { exams: arrayUnion({ id: Date.now().toString(), title, questions: currentExamQuestions }) });
+            await sendSystemNotification("تقييم جديد", `تمت إضافة تقييم: ${title}`, "alert"); showToast("تم اعتماد الامتحان بنجاح", "success"); loadAdminData();
+        };
+
+        const renderStudentCourses = async () => {
+            const list = document.getElementById('studentCoursesList');
+            if(!list) return;
+            const snapshot = await getDocs(collection(db, "courses"));
+            list.innerHTML = '';
+            
+            if(snapshot.empty) {
+                list.innerHTML = `<div class="col-span-full text-center py-10 text-slate-500 scroll-reveal"><i class="fas fa-book-reader text-3xl sm:text-4xl mb-3 opacity-50"></i><p class="text-sm sm:text-base">لا توجد مقررات دراسية متاحة حالياً.</p></div>`;
+                setTimeout(window.applyScrollAnimations, 50);
+                return;
+            }
+
+            snapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                const el = document.createElement('div');
+                el.className = 'course-card bg-slate-800 border border-slate-700 rounded-3xl p-5 sm:p-6 cursor-pointer relative overflow-hidden group min-h-[140px] sm:min-h-[160px] flex flex-col justify-between scroll-reveal';
+                el.innerHTML = `
+                    <div class="absolute -left-5 sm:-left-10 -bottom-5 sm:-bottom-10 text-indigo-500/10 course-icon-bg z-0"><i class="fas fa-book-open text-7xl sm:text-9xl"></i></div>
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-indigo-500/20 rounded-xl flex items-center justify-center mb-3 sm:mb-4 text-indigo-400 border border-indigo-500/30 group-hover:bg-indigo-500 group-hover:text-white transition-colors shrink-0"><i class="fas fa-layer-group text-lg sm:text-xl"></i></div>
+                        <h3 class="font-black text-lg sm:text-xl text-white mb-1 sm:mb-2 leading-tight">${data.name}</h3>
+                    </div>
+                    <div class="relative z-10 flex justify-between items-center mt-3 sm:mt-4 border-t border-slate-700 pt-3 sm:pt-4">
+                        <span class="text-[10px] sm:text-xs font-bold text-slate-400 bg-slate-900 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg flex items-center gap-1 sm:gap-2"><i class="fas fa-play-circle text-red-400"></i> ${(data.videos||[]).length} | <i class="fas fa-file-alt text-blue-400"></i> ${(data.files||[]).length}</span>
+                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-700 flex items-center justify-center text-white group-hover:bg-amber-500 transition-colors shrink-0"><i class="fas fa-chevron-left rtl:rotate-180 text-[10px] sm:text-xs"></i></div>
+                    </div>
+                `;
+                el.onclick = () => { selectedCourse = { id: docSnap.id, ...data }; router(); };
+                list.appendChild(el);
+            });
+            setTimeout(window.applyScrollAnimations, 50);
+        };
+
+        const renderCourseContent = () => {
+            const videoList = document.getElementById('videoList');
+            if(selectedCourse.videos?.length > 0) {
+                videoList.innerHTML = selectedCourse.videos.map(v => {
+                    // استخراج معرف اليوتيوب لجلب الصورة المصغرة بدلاً من تحميل الفيديو
+                    let yId = v.url.includes('embed/') ? v.url.split('embed/')[1].split('?')[0] : v.url.split('/').pop();
+                    let thumbUrl = `https://img.youtube.com/vi/${yId}/hqdefault.jpg`;
+                    
+                    let isCompleted = userData?.completedVideos?.includes(v.id) || false;
+                    let btnClass = isCompleted ? 'bg-green-500 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600';
+                    let btnIcon = isCompleted ? 'fa-check-circle' : 'fa-circle';
+                    let btnText = isCompleted ? 'مكتمل' : 'تم الإنجاز';
+
+                    return `
+                    <div class="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-md scroll-reveal relative mb-3 group">
+                        <!-- الخانة العلوية (المستطيل القابل للضغط) -->
+                        <div class="p-3 sm:p-4 flex justify-between items-center bg-slate-800 cursor-pointer hover:bg-slate-700 transition border-b border-transparent hover:border-slate-600" onclick="window.toggleVideoAccordion('vid-container-${v.id}', 'icon-accordion-${v.id}')">
+                            <div class="flex items-center gap-2 sm:gap-3 flex-1 overflow-hidden">
+                                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 shrink-0"><i class="fab fa-youtube text-xs sm:text-base"></i></div>
+                                <h4 class="font-bold text-slate-200 text-xs sm:text-sm truncate">${v.title}</h4>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <!-- زر الإنجاز -->
+                                <button onclick="window.toggleVideoCompletion(event, '${v.id}')" id="btn-complete-${v.id}" class="${btnClass} px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition flex items-center gap-1.5 shrink-0 ml-2">
+                                    <i class="fas ${btnIcon}"></i> <span id="text-complete-${v.id}">${btnText}</span>
+                                </button>
+                                <i class="fas fa-chevron-down text-slate-500 text-sm ml-1 transition-transform duration-300" id="icon-accordion-${v.id}"></i>
+                            </div>
+                        </div>
+
+                        <!-- مساحة الفيديو (مخفية افتراضياً) -->
+                        <div id="vid-container-${v.id}" class="hidden">
+                            <div class="aspect-video relative group border-t border-slate-700">
+                                <!-- غطاء شفاف يحاكي زر التشغيل -->
+                                <div class="absolute inset-0 z-10 cursor-pointer transition-all duration-300 group-hover:bg-black/20 flex items-center justify-center" onclick="window.logVideoClick('${v.id}', '${v.title}', this, '${v.url}')">
+                                    <div class="w-12 h-12 bg-red-600/90 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(220,38,38,0.5)] transform transition group-hover:scale-110">
+                                        <i class="fas fa-play text-white ml-1 text-lg"></i>
+                                    </div>
+                                </div>
+                                <!-- عرض صورة مصغرة بدلاً من الـ iframe الكامل لتسريع التحميل -->
+                                <img src="${thumbUrl}" class="w-full h-full object-cover absolute top-0 left-0 z-0" alt="${v.title}">
+                            </div>
+                        </div>
+                    </div>`
+                }).join('');
+            } else { videoList.innerHTML = `<p class="text-slate-500 text-xs sm:text-sm scroll-reveal"><i class="fas fa-info-circle"></i> لا توجد محاضرات مرئية حالياً.</p>`; }
+
+            const examList = document.getElementById('examList');
+            if(selectedCourse.exams?.length > 0) {
+                examList.innerHTML = selectedCourse.exams.map((e, i) => `
+                    <div onclick="startExam(${i})" class="p-3 sm:p-4 bg-slate-800 rounded-xl cursor-pointer hover:bg-slate-700 border border-slate-700 hover:border-amber-500/50 transition flex justify-between items-center group shadow-sm scroll-reveal">
+                        <div class="flex items-center gap-2 sm:gap-3">
+                            <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500 shrink-0"><i class="fas fa-pen-nib text-xs sm:text-sm"></i></div>
+                            <span class="font-bold text-slate-200 text-xs sm:text-sm">${e.title}</span>
+                        </div>
+                        <div class="text-[10px] sm:text-xs font-bold text-amber-500 bg-amber-500/10 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg group-hover:bg-amber-500 group-hover:text-slate-900 transition whitespace-nowrap shrink-0">ابدأ التقييم <i class="fas fa-chevron-left ml-1 rtl:rotate-180 text-[8px] sm:text-[10px]"></i></div>
+                    </div>`).join('');
+            } else { examList.innerHTML = `<p class="text-slate-500 text-xs sm:text-sm scroll-reveal"><i class="fas fa-info-circle"></i> لا توجد تقييمات حالياً.</p>`; }
+
+            const fileList = document.getElementById('fileList');
+            if(selectedCourse.files?.length > 0) {
+                fileList.innerHTML = selectedCourse.files.map(f => `
+                    <a href="${f.url}" target="_blank" class="p-3 sm:p-4 bg-slate-800 rounded-xl hover:bg-slate-700 border border-slate-700 hover:border-blue-500/50 transition flex justify-between items-center group shadow-sm scroll-reveal">
+                        <div class="flex items-center gap-2 sm:gap-3 overflow-hidden">
+                            <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 shrink-0"><i class="fas fa-file-pdf text-xs sm:text-sm"></i></div>
+                            <span class="font-bold text-slate-200 text-xs sm:text-sm truncate">${f.name}</span>
+                        </div>
+                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-700 flex items-center justify-center text-slate-400 group-hover:bg-blue-500 group-hover:text-white transition shrink-0"><i class="fas fa-download text-xs sm:text-sm"></i></div>
+                    </a>`).join('');
+            } else { fileList.innerHTML = `<p class="text-slate-500 text-xs sm:text-sm scroll-reveal"><i class="fas fa-info-circle"></i> لا توجد ملفات أو ملازم حالياً.</p>`; }
+            
+            setTimeout(window.applyScrollAnimations, 50);
+        };
+
+        window.startExam = (index) => { 
+            selectedExam = selectedCourse.exams[index]; 
+            router(); 
+            
+            const attempts = userData?.examAttempts?.[selectedExam.id] || [];
+            const historySection = document.getElementById('examHistorySection');
+            const historyList = document.getElementById('examHistoryList');
+            const countSpan = document.getElementById('examAttemptsCount');
+            const warningMax = document.getElementById('examWarningMax');
+            const submitBtn = document.getElementById('submitExamBtn');
+            
+            if(attempts.length > 0) {
+                historySection.classList.remove('hidden');
+                countSpan.textContent = attempts.length;
+                historyList.innerHTML = attempts.map((a, i) => `
+                    <div class="bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-lg text-xs font-bold ${a.score >= Math.floor(a.maxScore/2) ? 'text-green-400 border-green-500/30' : 'text-amber-400 border-amber-500/30'} shadow-sm">
+                        <span class="text-slate-400 mr-1">محاولة ${i+1}:</span> ${a.score}/${a.maxScore}
+                    </div>
+                `).join('');
+            }
+            
+            if(attempts.length >= 10) {
+                warningMax.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+                setTimeout(() => {
+                   document.querySelectorAll('.q-block input, .q-block textarea').forEach(inp => inp.disabled = true);
+                }, 100);
+            }
+
+            document.getElementById('examQuestions').innerHTML = selectedExam.questions.map((q, i) => 
+                `<div class="bg-slate-800 p-4 sm:p-6 md:p-8 rounded-2xl border border-slate-700 q-block relative shadow-md scroll-reveal" id="qblock-${i}">
+                    <div class="flex gap-3 sm:gap-4 items-start mb-4 sm:mb-6">
+                        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-indigo-500/20 text-indigo-400 font-black flex items-center justify-center flex-shrink-0 border border-indigo-500/30 text-sm sm:text-base">${i+1}</div>
+                        <p class="font-bold text-base sm:text-lg md:text-xl text-white leading-relaxed pt-1">${q.q}</p>
+                    </div>
+                    
+                    <div class="pl-0 md:pl-14 options-container">
+                    ${q.type === 'mcq' ? `<div class="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3">${q.options.map(o => `
+                        <label class="flex items-center p-3 sm:p-4 bg-slate-900 rounded-xl cursor-pointer hover:bg-slate-700 transition border border-slate-600 hover:border-indigo-400 group">
+                            <input type="radio" name="q${i}" value="${o}" class="w-4 h-4 sm:w-5 sm:h-5 accent-indigo-500 mr-2 sm:mr-3 rtl:ml-2 sm:rtl:ml-3 rtl:mr-0 shrink-0"> 
+                            <span class="font-semibold text-slate-300 group-hover:text-white text-xs sm:text-sm md:text-base">${o}</span>
+                        </label>`).join('')}</div>` : 
+                      q.type === 'tf' ? `<div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                        <label class="flex-1 flex items-center justify-center p-3 sm:p-4 bg-slate-900 rounded-xl cursor-pointer hover:bg-slate-700 transition border border-slate-600 hover:border-green-400 group"><input type="radio" name="q${i}" value="True" class="w-4 h-4 sm:w-5 sm:h-5 accent-green-500 mr-2 rtl:ml-2 rtl:mr-0 shrink-0"> <span class="font-bold text-slate-300 group-hover:text-green-400 text-sm sm:text-base">صح</span></label>
+                        <label class="flex-1 flex items-center justify-center p-3 sm:p-4 bg-slate-900 rounded-xl cursor-pointer hover:bg-slate-700 transition border border-slate-600 hover:border-red-400 group"><input type="radio" name="q${i}" value="False" class="w-4 h-4 sm:w-5 sm:h-5 accent-red-500 mr-2 rtl:ml-2 rtl:mr-0 shrink-0"> <span class="font-bold text-slate-300 group-hover:text-red-400 text-sm sm:text-base">خطأ</span></label>
+                        </div>` :
+                      `<textarea name="q${i}" class="w-full bg-slate-900 p-3 sm:p-4 rounded-xl border border-slate-600 text-white min-h-[100px] sm:min-h-[120px] focus:border-indigo-500 outline-none transition resize-none text-xs sm:text-sm" placeholder="اكتب إجابتك بالتفصيل هنا..."></textarea>`
+                    }
+                    </div>
+
+                    <!-- Result Panel per question (hidden initially) -->
+                    <div id="res-${i}" class="hidden mt-4 sm:mt-6 ml-0 md:ml-14 p-4 sm:p-5 bg-slate-900 rounded-xl border-2 animate-fade-in relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-1.5 sm:w-2 h-full res-indicator"></div>
+                        <p class="font-bold text-slate-400 mb-1.5 sm:mb-2 text-[10px] sm:text-xs uppercase tracking-wider"><i class="fas fa-check-double mr-1 text-amber-500"></i> الإجابة النموذجية المعتمدة:</p>
+                        <p class="text-white font-bold text-sm sm:text-base md:text-lg mb-2 sm:mb-3 bg-slate-800 p-2 sm:p-3 rounded-lg border border-slate-700">${q.answer}</p>
+                        ${q.explain ? `<div class="mt-3 sm:mt-4 pt-2 sm:pt-3 border-t border-slate-700/50"><p class="text-[10px] sm:text-xs text-indigo-300 font-semibold mb-1"><i class="fas fa-lightbulb text-amber-400 mr-1"></i> التفسير الأكاديمي:</p><p class="text-xs sm:text-sm text-slate-300 leading-relaxed">${q.explain}</p></div>` : ''}
+                    </div>
+                </div>`
+            ).join('');
+            
+            if(window.MathJax) { setTimeout(()=> window.MathJax.typesetPromise(), 100); }
+            setTimeout(window.applyScrollAnimations, 50);
+        };
+        
+        window.submitExam = async () => {
+            let score = 0;
+            const mcqTfCount = selectedExam.questions.filter(q=>q.type!=='essay').length;
+            
+            document.querySelectorAll('.q-block').forEach((b, i) => {
+                const q = selectedExam.questions[i];
+                const resultDiv = document.getElementById(`res-${i}`);
+                const indicator = resultDiv.querySelector('.res-indicator');
+                resultDiv.classList.remove('hidden'); 
+                
+                b.querySelectorAll('input, textarea').forEach(inp => inp.disabled = true);
+
+                if(q.type !== 'essay') { 
+                    const selected = b.querySelector('input:checked');
+                    if(selected && selected.value === q.answer) {
+                        score++;
+                        b.classList.add('border-green-500/50', 'bg-green-500/5');
+                        resultDiv.classList.add('border-green-500/30');
+                        indicator.classList.add('bg-green-500');
+                    } else {
+                        b.classList.add('border-red-500/50', 'bg-red-500/5');
+                        resultDiv.classList.add('border-red-500/30');
+                        indicator.classList.add('bg-red-500');
+                    }
+                } else {
+                    b.classList.add('border-blue-500/50', 'bg-blue-500/5'); 
+                    resultDiv.classList.add('border-blue-500/30');
+                    indicator.classList.add('bg-blue-500');
+                }
+            });
+            
+            const percentage = mcqTfCount > 0 ? Math.round((score / mcqTfCount) * 100) : 0;
+            let colorClass = percentage >= 85 ? 'text-green-400' : percentage >= 50 ? 'text-amber-400' : 'text-red-400';
+            
+            if (currentUser && currentUser.role === 'student') {
+                try {
+                    if (!userData.examAttempts) userData.examAttempts = {};
+                    if (!userData.examAttempts[selectedExam.id]) userData.examAttempts[selectedExam.id] = [];
+                    
+                    if(userData.examAttempts[selectedExam.id].length < 10) {
+                        userData.examAttempts[selectedExam.id].push({ score: score, maxScore: mcqTfCount, date: new Date().toISOString() });
+                        await setDoc(doc(db, "users", currentUser.uid), { examAttempts: userData.examAttempts }, { merge: true });
+                    }
+
+                    await addDoc(collection(db, "activity_logs"), {
+                        userId: currentUser.uid,
+                        userName: userData.name,
+                        type: 'exam',
+                        examTitle: selectedExam.title,
+                        score: score,
+                        maxScore: mcqTfCount,
+                        date: new Date().toISOString()
+                    });
+                } catch(e) { console.error("Error logging exam result", e); }
+            }
+
+            const attemptsCount = userData?.examAttempts?.[selectedExam.id]?.length || 0;
+
+            document.getElementById('scoreDisplay').innerHTML = `
+                <span class="${colorClass}">${score}</span> <span class="text-2xl sm:text-3xl text-slate-500">/ ${mcqTfCount}</span>
+                <p class="text-xs sm:text-sm font-semibold text-slate-400 mt-3 sm:mt-4 bg-slate-900 inline-block px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-slate-700 w-full"><i class="fas fa-info-circle text-blue-400 mr-1"></i> الأسئلة المقالية تُقيّم يدوياً من أستاذ المادة ولا تُحسب في النتيجة الآلية.</p>
+                
+                <div class="mt-6 sm:mt-8 flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 border-t border-slate-700/50 pt-6">
+                    <button onclick="window.exitExam()" class="w-full sm:w-auto px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-bold transition text-sm flex items-center justify-center gap-2 shadow-sm"><i class="fas fa-arrow-right rtl:rotate-180"></i> العودة للمقرر</button>
+                    ${attemptsCount < 10 ? 
+                        `<button onclick="window.startExam(${selectedCourse.exams.findIndex(e=>e.id===selectedExam.id)})" class="w-full sm:w-auto px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition text-sm shadow-lg shadow-indigo-500/30 flex items-center justify-center gap-2"><i class="fas fa-redo"></i> إعادة الامتحان (${10 - attemptsCount} محاولات)</button>` : 
+                        `<span class="w-full sm:w-auto px-6 py-3 bg-red-500/10 text-red-400 rounded-xl font-bold text-sm border border-red-500/20 text-center"><i class="fas fa-ban ml-1"></i> استنفذت جميع المحاولات</span>`
+                    }
+                </div>
+            `;
+            
+            document.getElementById('examResultPanel').classList.remove('hidden');
+            document.getElementById('submitExamBtn').classList.add('hidden'); 
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            if(window.MathJax) { window.MathJax.typesetPromise(); }
+            setTimeout(window.applyScrollAnimations, 50);
+        };
+
+        const router = () => {
+            if (showSignupSuccess) { render(views.signupSuccess()); setTimeout(window.applyScrollAnimations, 100); return; }
+            if (currentUser) {
+                document.getElementById('notifWrapper').classList.remove('hidden');
+                
+                const navProfile = document.getElementById('navProfile');
+                navProfile.classList.remove('hidden');
+                navProfile.innerHTML = `
+                    <div class="flex items-center justify-center sm:justify-start gap-2 sm:gap-3 bg-slate-800/80 px-2 sm:px-4 py-1.5 rounded-full border border-slate-700 backdrop-blur-sm shadow-sm cursor-pointer hover:bg-slate-700 transition max-w-full" onclick="window.setStudentTab('settings')">
+                        <img src="${userData?.avatar || 'https://ui-avatars.com/api/?name='+(userData?.name || 'User')+'&background=8c4731&color=fff'}" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-indigo-500/50 object-cover shrink-0">
+                        <div class="text-right leading-none hidden min-[400px]:block overflow-hidden max-w-[120px] sm:max-w-[200px]">
+                            <span class="text-xs sm:text-sm font-bold text-white block truncate">${userData?.name || 'مستخدم'}</span>
+                            <span class="text-[9px] sm:text-[10px] text-indigo-400 font-bold truncate">${currentUser.role === 'admin' ? 'إدارة المنصة' : 'طالب أكاديمي'}</span>
+                        </div>
+                    </div>
+                `;
+
+                startNotificationListener();
+                if (currentUser.role === 'admin') { render(views.adminDashboard()); loadAdminData(); }
+                else if(selectedExam) { render(views.examView()); }
+                else if (selectedCourse) { render(views.courseView()); renderCourseContent(); }
+                else { render(views.studentDashboard()); renderStudentCourses(); }
+            } else {
+                document.getElementById('notifWrapper').classList.add('hidden');
+                document.getElementById('navProfile').classList.add('hidden');
+                if(notifUnsubscribe) notifUnsubscribe();
+                render(views.auth());
+                document.getElementById('authForm')?.addEventListener('submit', handleAuth);
+            }
+            
+            // Apply scroll animations after rendering
+            setTimeout(window.applyScrollAnimations, 100);
+        };
+
+        onAuthStateChanged(auth, async (user) => {
+            if (isSigningUp) return;
+            if (user) {
+                if(user.email === ADMIN_EMAIL) { 
+                    const docSnap = await getDoc(doc(db, "users", user.uid));
+                    userData = docSnap.exists() ? docSnap.data() : { name: "NOUR NADY", avatar: "IMG_1068.PNG.jpg" };
+                    currentUser = { ...user, role: 'admin' }; 
+                } else {
+                    const docSnap = await getDoc(doc(db, "users", user.uid));
+                    if(docSnap.exists() && docSnap.data().status === 'approved') { userData = docSnap.data(); currentUser = { ...user, role: 'student' }; }
+                    else { await signOut(auth); currentUser = null; }
+                }
+            } else { currentUser = null; }
+            router();
+        });
+    </script>
+    <script>
+  if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+    navigator.serviceWorker.register('./sw.js').catch(function(error) {
+        console.warn('Service Worker registration failed:', error);
+    });
+  }
+    </script>
+</body>
+</html>
